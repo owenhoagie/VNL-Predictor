@@ -4,15 +4,12 @@ website_configs = [
         "name": "blocking",
         "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-blockers/",
         "header_map": {
-            "rank": "Rank",
-            "player": "Player Name",
+            "playername": "Player Name",
             "federation": "Team",
             "stuff-blocks": "Blocks",
             "faults": "Blocking Errors",
             "rebounds": "Rebounds",
-            "average-per-match": "Blocks Per Match",
-            "success-perc": "Block Success %",
-            "total-attempts": "Block Attempts"
+            "average-per-match": "Blocks Per Match"
         },
         "columns_to_keep": ["Player Name", "Team", "Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"]
     },
