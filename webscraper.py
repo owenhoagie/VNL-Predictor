@@ -68,11 +68,15 @@ def main():
     # chrome_options.add_argument("--headless")
     service = ChromeService()
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    import os
+    dataset_dir = "Dataset"
+    if not os.path.exists(dataset_dir):
+        os.makedirs(dataset_dir)
     try:
         for config in website_configs:
             stats = scrape_table(driver, config["url"], config["header_map"], config["columns_to_keep"])
-            # Write each website's data to its own CSV file
-            filename = f"{config['name']}_stats.csv"
+            # Write each website's data to its own CSV file in Dataset folder
+            filename = os.path.join(dataset_dir, f"{config['name']}_stats.csv")
             with open(filename, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)
                 header = config["columns_to_keep"]

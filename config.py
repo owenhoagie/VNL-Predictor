@@ -1,6 +1,22 @@
 # config.py
 website_configs = [
     {
+        "name": "attacking",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-attackers/",
+        "header_map": {
+            "rank": "Rank",
+            "playername": "Player Name",
+            "federation": "Team",
+            "attacks": "Kills",
+            "faults": "Attacking Errors",
+            "shots": "Attacking Attempts",
+            "average-per-match": "Attacks Per Match",
+            "success-perc": "Attack Success %",
+            "total-attempts": "Total Attack Attempts"
+        },
+        "columns_to_keep": ["Player Name", "Team", "Kills", "Attacking Errors", "Attacking Attempts", "Attacks Per Match"]
+    },
+    {
         "name": "blocking",
         "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-blockers/",
         "header_map": {
@@ -15,22 +31,6 @@ website_configs = [
             "total-attempts": "Total Blocks"
         },
         "columns_to_keep": ["Player Name", "Team", "Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"]
-    },
-    {
-        "name": "attacking",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-attackers/",
-        "header_map": {
-            "rank": "Rank",
-            "playername": "Player Name",
-            "federation": "Team",
-            "attacks": "Kills",
-            "faults": "Attacking Errors",
-            "shots": "Attacking Attempts",
-            "average-per-match": "Attacks Per Match",
-            "success-perc": "Attack Success %",
-            "total-attempts": "Total Attack Attempts"
-        },
-        "columns_to_keep": ["Player Name", "Team", "Kills", "Attacking Errors", "Attack Attempts", "Attacks Per Match"]
     },
     {
         "name": "serving",
