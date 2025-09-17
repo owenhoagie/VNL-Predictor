@@ -1,30 +1,31 @@
-import os
 import pandas as pd
-from functools import reduce
+import glob
+import os
 
-# Path to the Dataset folder
-dataset_dir = os.path.join(os.path.dirname(__file__), "Dataset")
+dataset_dir = "Dataset"
+csv_files = glob.glob(os.path.join(dataset_dir, "*.csv"))
 
-# Get all CSV files in the Dataset directory
-csv_files = [f for f in os.listdir(dataset_dir) if f.endswith('.csv')]
+# Read all CSVs into dataframes and keep track of their columns
+dfs = []
+column_groups = []
+for f in csv_files:
+    df = pd.read_csv(f)
+    dfs.append(df)
+    # Exclude Player Name and Team from stat columns
+    stat_cols = [col for col in df.columns if col not in ["Player Name", "Team"]]
+    column_groups.append(stat_cols)
 
-# Sort files by stat type (optional: alphabetical order)
-csv_files.sort()
+# Merge all dataframes on Player Name and Team
+merged_df = dfs[0]
+for df in dfs[1:]:
+    merged_df = pd.merge(merged_df, df, on=["Player Name", "Team"], how="outer")
 
-# Read all CSVs into DataFrames, keeping track of stat type
-dataframes = []
-stat_types = []
-for csv_file in csv_files:
-    stat_type = csv_file.replace('_stats.csv', '')
-    df = pd.read_csv(os.path.join(dataset_dir, csv_file))
-    # Rename columns to include stat type, except 'Player Name' and 'Team'
-    df = df.rename(columns={col: f"{stat_type}_{col}" if col not in ['Player Name', 'Team'] else col for col in df.columns})
-    dataframes.append(df)
-    stat_types.append(stat_type)
+# Fill NaN with 0
+merged_df = merged_df.fillna(0)
 
-# Merge all DataFrames on 'Player Name' and 'Team'
-merged_df = reduce(lambda left, right: pd.merge(left, right, on=['Player Name', 'Team'], how='outer'), dataframes)
+# Build final column order: Player Name, Team, then grouped stat columns
+final_columns = ["Player Name", "Team"] + [col for group in column_groups for col in group]
+merged_df = merged_df[final_columns]
 
-# Save merged DataFrame to CSV
-output_path = os.path.join(os.path.dirname(__file__), "merged_dataset.csv")
-merged_df.to_csv(output_path, index=False)
+merged_df.to_csv("merged_stats.csv", index=False)
+print("Merged stats saved to merged_stats.csv")
