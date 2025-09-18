@@ -81,6 +81,12 @@ function parseHeightToNumber(value: string): number {
   return match ? Number(match[0]) : NaN
 }
 
+function getDisplayLabel(key: string): string {
+  if (key === "Height") return "Height (cm)";
+  if (key === "Age") return "Age (years)";
+  return key;
+}
+
 function App() {
   const [rawData, setRawData] = useState<PlayerRecord[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -229,15 +235,15 @@ function App() {
       tooltip: {
         callbacks: {
           label: (ctx: any) => {
-            const r: PlayerRecord = ctx.raw.raw
-            return `${r['Player Name']} (${r.Team}) — ${xKey}: ${ctx.raw.x}, ${yKey}: ${ctx.raw.y}`
+            const r: PlayerRecord = ctx.raw.raw;
+            return `${r['Player Name']} (${r.Team}) — ${getDisplayLabel(xKey)}: ${ctx.raw.x}, ${getDisplayLabel(yKey)}: ${ctx.raw.y}`;
           },
         },
       },
     },
     scales: {
-      x: { title: { display: true, text: xKey as string }, min: axisBounds.xMin, max: axisBounds.xMax },
-      y: { title: { display: true, text: yKey as string }, min: axisBounds.yMin, max: axisBounds.yMax },
+      x: { title: { display: true, text: getDisplayLabel(xKey) }, min: axisBounds.xMin, max: axisBounds.xMax },
+      y: { title: { display: true, text: getDisplayLabel(yKey) }, min: axisBounds.yMin, max: axisBounds.yMax },
     },
     animation: { duration: 250 },
     parsing: false as const,
