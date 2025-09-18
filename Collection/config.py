@@ -39,7 +39,7 @@ website_configs = [
             "rank": "Rank",
             "playername": "Player Name",
             "federation": "Team",
-            "server-points": "Aces",
+            "serve-points": "Aces",
             "faults": "Service Errors",
             "hits": "Service Attempts",
             "average-per-match": "Serves Per Match",
@@ -79,7 +79,7 @@ website_configs = [
             "success-perc": "Dig Success %",
             "total-attempts": "Total Digs"
         },
-        "columns_to_keep": ["Player Name", "Team", "Great Saves", "Defensive Errors", "Receptions", "Digs Per Match"]
+        "columns_to_keep": ["Player Name", "Team", "Great Saves", "Defensive Errors", "Defensive Receptions", "Digs Per Match"]
     },
     {
         "name": "receiving",
