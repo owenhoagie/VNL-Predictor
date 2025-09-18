@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import csv
 import time
-from config import website_configs
+from Collection.config import website_configs
 
 def scrape_table(driver, url, header_map, columns_to_keep):
     driver.get(url)
