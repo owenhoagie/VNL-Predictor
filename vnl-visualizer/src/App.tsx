@@ -38,32 +38,39 @@ type PlayerRecord = {
 }
 
 const numericAxes = [
+  // Age / Height
   'Age',
   'Height',
-  'Running Sets',
-  'Setting Errors',
-  'Still Sets',
-  'Sets Per Match',
-  'Successful Receives',
-  'Receiving Errors',
-  'Service Receptions',
-  'Receives Per Match',
-  'Aces',
-  'Service Errors',
-  'Service Attempts',
-  'Serves Per Match',
-  'Blocks',
-  'Blocking Errors',
-  'Rebounds',
-  'Blocks Per Match',
-  'Great Saves',
-  'Defensive Errors',
-  'Defensive Receptions',
-  'Digs Per Match',
+  // Attacking stats
   'Kills',
   'Attacking Errors',
   'Attacking Attempts',
   'Attacks Per Match',
+  // Blocking stats
+  'Blocks',
+  'Blocking Errors',
+  'Rebounds',
+  'Blocks Per Match',
+  // Serving stats
+  'Aces',
+  'Service Errors',
+  'Service Attempts',
+  'Serves Per Match',
+  // Setting stats
+  'Running Sets',
+  'Setting Errors',
+  'Still Sets',
+  'Sets Per Match',
+  // Defense stats
+  'Great Saves',
+  'Defensive Errors',
+  'Digs Per Match',
+  'Defensive Receptions',
+  // Receiving stats
+  'Successful Receives',
+  'Receiving Errors',
+  'Service Receptions',
+  'Receives Per Match',
 ] as const
 
 type AxisKey = typeof numericAxes[number]
@@ -82,8 +89,8 @@ function App() {
   const [positionsSelected, setPositionsSelected] = useState<string[]>([])
   const [ageRange, setAgeRange] = useState<[number, number]>([0, 100])
   const [heightRange, setHeightRange] = useState<[number, number]>([150, 230])
-  const [xKey, setXKey] = useState<AxisKey>('Kills')
-  const [yKey, setYKey] = useState<AxisKey>('Blocks')
+  const [xKey, setXKey] = useState<AxisKey>('Age')
+  const [yKey, setYKey] = useState<AxisKey>('Kills')
 
   useEffect(() => {
     fetch('/merged_stats.csv')
