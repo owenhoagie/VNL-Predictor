@@ -1,446 +1,337 @@
 Player Name,Team,Successful Receives,Receiving Errors,Service Receptions,Receives Per Match
-Ivo Casas,POR,25,3,57,8.33
-Palonsky,ARG,20,4,48,10.00
-Lourenço,POR,19,4,36,6.33
-Koops,NED,19,6,36,6.33
-Nikola,QAT,18,3,60,6.00
-Vasina,CZE,18,3,32,9.00
-Espejo,PHI,17,1,35,8.50
-Shoji,USA,17,1,23,5.67
-Piza,COL,17,4,41,5.67
-Heslinga,CAN,17,2,29,5.67
-Elhossiny,EGY,17,2,45,8.50
-Yant,CUB,16,3,60,5.33
-D. Kolev,BUL,16,3,49,5.33
-Jorna,NED,16,4,55,5.33
-Marttila,FIN,1,0,2,0.50
-Hoag,CAN,15,5,43,5.00
-Garcia,CUB,15,3,35,5.00
-B. Bayraktar,TUR,15,7,30,5.00
-Atanasov,BUL,15,3,38,5.00
-Ybanez,PHI,14,1,32,7.00
-Brand,GER,14,3,38,4.67
-A. Nikolov,BUL,14,2,21,4.67
-Morteza,IRI,14,4,35,7.00
-Louati,FRA,14,1,16,7.00
-Subong,KOR,14,7,35,7.00
-N. Marques,POR,13,10,35,4.33
-Ran,JPN,13,1,42,4.33
-Kovačič,SLO,13,4,49,4.33
-Popiwczak,POL,13,2,34,4.33
-Maique,BRA,13,2,28,6.50
-Benavides,COL,12,6,52,4.00
-Almarrug,LBA,12,9,42,4.00
-Tuinstra,NED,12,2,33,4.00
-Z. Štern,SLO,12,3,36,4.00
-Aravena,CHI,12,4,36,4.00
-Hazrat,IRI,12,2,15,6.00
-Dour,ALG,12,6,31,6.00
-Arman,IRI,11,1,15,5.50
-M. Reda,EGY,11,5,33,5.50
-Arthur,BRA,11,4,26,5.50
-Qu Z.S.,CHN,11,2,32,5.50
-Lopez,CUB,10,1,23,3.33
-Renan,QAT,10,3,30,3.33
-Kovalov,UKR,10,1,25,5.00
-Galabov,CZE,10,0,23,5.00
-Karamosli E,TUN,9,4,31,4.50
-Korbosli T,TUN,9,3,19,4.50
-Peta,ROU,9,2,31,3.00
-Chitigoi,ROU,9,1,39,3.00
-Köykkä,FIN,9,4,29,4.50
-Deroo,BEL,9,2,27,4.50
-Grebennikov,FRA,9,2,18,4.50
-Garwash,LBA,8,10,47,2.67
-Ogawa,JPN,8,3,15,2.67
-Mandıracı,TUR,8,0,47,2.67
-Semeniuk,POL,8,3,21,2.67
-Suihkonen,FIN,8,0,26,4.00
-Lantsoght,BEL,8,4,38,4.00
-Negic,SRB,8,2,26,4.00
-Ben Romdhane.O,TUN,7,5,17,3.50
-Ewert,USA,7,4,23,2.33
-Röhrs,GER,7,4,52,2.33
-Klok,NED,7,1,5,2.33
-Mujanović,SLO,7,10,47,2.33
-A.Said,EGY,7,1,21,3.50
-Boiko,UKR,7,3,11,3.50
-Ngapeth,FRA,7,1,22,3.50
-Bottolo,ITA,7,1,29,3.50
-Currie,CAN,6,2,41,2.00
-Kosinski,ROU,6,4,34,2.00
-Danani,ARG,6,1,23,3.00
-Kujundžić,SRB,6,1,32,3.00
-Kyeongmin,KOR,6,4,22,3.00
-Liu L.B.,CHN,6,0,33,3.00
-Balaso,ITA,6,5,31,3.00
-Abi Ayad,ALG,6,4,25,3.00
-Champlin,USA,5,3,32,1.67
-Graven,GER,5,0,41,1.67
-Reichert,GER,5,1,14,1.67
-Naji,QAT,5,4,32,1.67
-Kozamernik,SLO,5,0,1,1.67
-Fornal,POL,5,1,23,1.67
-Vicentin,ARG,5,3,20,2.50
-Yanchuk,UKR,5,4,23,2.50
-Michieletto,ITA,5,0,30,2.50
-Bagunas,PHI,4,1,29,2.00
-Dagostino,USA,4,1,9,1.33
-Mendoza,COL,4,1,15,1.33
-Roosvuelt,COL,4,4,35,1.33
-Aponza,COL,4,0,4,1.33
-Simón,CUB,4,0,3,1.33
-M. Lagumdzija,TUR,4,2,18,1.33
-Waleed,QAT,4,2,18,1.33
-Bonacic,CHI,0,0,0,0
-Castillo,CHI,4,0,10,1.33
-Bravo,CHI,4,1,40,1.33
-Martinez Franchi,ARG,4,0,14,2.00
-Perić,SRB,4,3,29,2.00
-Henno,FRA,4,1,16,2.00
-Clevenot,FRA,4,0,10,2.00
-Hosni,ALG,4,3,20,2.00
-Hfaiedh H.,TUN,3,1,5,1.50
-Abulababa,LBA,3,11,45,1.00
-Mergarejo,CUB,3,3,19,1.00
-Ishikawa,JPN,3,3,28,1.00
-Yamamoto,JPN,3,3,22,1.00
-Yüksel,TUR,3,0,11,1.00
-Asparuhov,BUL,3,2,12,1.00
-Aciobanitei,ROU,3,8,16,1.00
-Ronkainen,FIN,3,2,16,1.50
-Rotty,BEL,3,4,33,1.50
-Hanyong,KOR,3,2,23,1.50
-Pasteur,USA,2,0,13,0.67
-Robinson,USA,2,4,7,0.67
-Bedirhan,TUR,2,1,2,0.67
-Van Der Ent,NED,2,0,0,0.67
-Parraguirre,CHI,2,3,12,0.67
-Jadue,CHI,2,2,7,0.67
-Leon,POL,2,7,27,0.67
-Bala,ROU,2,3,12,0.67
-Kukartsev,ARG,2,0,3,1.00
-Savonsalmi,FIN,2,1,1,1.00
-Daneshdoust,IRI,2,0,3,1.00
-Deyo,EGY,2,0,3,1.00
-Junhyeok,KOR,2,1,0,1.00
-Honorato,BRA,2,0,3,1.00
-Russo,ITA,2,0,0,1.00
-Farouk,ALG,2,1,5,1.00
-Bouaziz. A,TUN,1,0,1,0.50
-Ridene.M,TUN,1,0,1,0.50
-McHenry,USA,1,0,4,0.33
-Santos,COL,1,0,0,0.33
-Young,CAN,1,1,13,0.33
-McCarthy,CAN,1,0,1,0.33
-Ilkhbayri . A,LBA,1,0,10,0.33
-Alwaddani,LBA,1,0,3,0.33
-J. Gutierrez,CUB,1,0,3,0.33
-Cveticanin,POR,1,0,6,0.33
-Otsuka,JPN,1,0,5,0.33
-Larry,JPN,1,1,0,0.33
-Krick,GER,1,1,4,0.33
-Grozdanov,BUL,1,0,0,0.33
-Korenblek,NED,1,0,0,0.33
-Bak,NED,1,1,5,0.33
-Sulaiman,QAT,1,1,11,0.33
-Belal,QAT,1,0,1,0.33
-A. Bakry,QAT,1,0,0,0.33
-T. Štern,SLO,1,1,4,0.33
-Pajenk,SLO,1,0,2,0.33
-Okroglič,SLO,1,0,2,0.33
-Ibarra,CHI,1,0,9,0.33
-Gago,CHI,1,0,0,0.33
-Bartha,ROU,1,0,3,0.33
-Loser Bruno,ARG,1,0,6,0.50
-Armoa Morel,ARG,1,0,4,0.50
-Tyynismaa,FIN,1,0,1,0.50
-Poriya,IRI,1,2,11,0.50
-A. Seoudy,EGY,1,0,1,0.50
-Coolman,BEL,1,0,0,0.50
-Zajicek,CZE,1,0,7,0.50
-Monik,CZE,1,1,19,0.50
-Changseong,KOR,1,0,1,0.50
-Lucarelli,BRA,1,1,30,0.50
-Ji D.S.,CHN,1,0,3,0.50
-Wang B.,CHN,1,0,36,0.50
-Giannelli,ITA,1,0,2,0.50
-Romanò,ITA,1,0,2,0.50
-Anzani,ITA,1,0,1,0.50
-Arab,ALG,1,0,0,0.50
-Retamar,PHI,0,0,0,0
-Lorenzo,PHI,0,0,3,0.00
-Malabunga,PHI,0,0,0,0
-Kalingking,PHI,0,0,0,0
-Taguibolos,PHI,0,0,0,0
-Ordiales,PHI,0,0,1,0.00
-Adajar,PHI,0,0,0,0
-Josafat,PHI,0,0,0,0
-Ramirez,PHI,0,0,0,0
-Buddin,PHI,0,0,0,0
-Disquitado,PHI,0,0,0,0
-Boussabah.A,TUN,0,0,0,0
-Kadhi A,TUN,0,1,5,0.00
-Ben Slimene K,TUN,0,0,0,0
-Nagga H.,TUN,0,0,0,0
-Baccour.W,TUN,0,0,0,0
-Mbareki S.,TUN,0,0,1,0.00
-Ben Taher.M,TUN,0,0,0,0
-Bongui.A,TUN,0,1,0,0.00
-Jendryk,USA,0,0,0,0
-Ensing,USA,0,0,0,0
-Garcia,USA,0,0,2,0.00
-Christenson,USA,0,0,2,0.00
-Averill,USA,0,0,0,0
-Ma'a,USA,0,0,0,0
-Knigge,USA,0,0,0,0
-Jimenez,COL,0,0,0,0
-Ruiz,COL,0,0,0,0
-Ararat,COL,0,0,3,0.00
-Caicedo,COL,0,0,0,0
-larrahondo,COL,0,0,0,0
-Jaramillo,COL,0,0,0,0
-Ambuila,COL,0,0,0,0
-Amaranto,COL,0,0,1,0.00
-Gyimah,CAN,0,1,6,0.00
-Herr,CAN,0,1,1,0.00
-J. Elser,CAN,0,0,0,0
-Howe,CAN,0,0,0,0
-Elgert,CAN,0,0,0,0
-Wassenaar Ketrzynski,CAN,0,0,0,0
-Sho,CAN,0,1,0,0.00
-Schnitzer,CAN,0,0,0,0
-Lui,CAN,0,0,0,0
-Abu Zariba,LBA,0,1,1,0.00
-jnefa,LBA,0,0,0,0
-Abdelmalek,LBA,0,0,2,0.00
-Soltan,LBA,0,0,0,0
-Mousa,LBA,0,3,8,0.00
-Alashlam,LBA,0,0,1,0.00
-Zakka Ragab Tarek,LBA,0,0,0,0
-Alghoul,LBA,0,0,3,0.00
-M. Alajeeli,LBA,0,1,2,0.00
-Masso,CUB,0,0,1,0.00
-Concepcion,CUB,0,0,3,0.00
-Gomez,CUB,0,0,1,0.00
-Bisset,CUB,0,0,0,0
-Camino,CUB,0,0,0,0
-Alonso,CUB,0,0,0,0
-Fiel,CUB,0,0,1,0.00
-Thondike,CUB,0,1,2,0.00
-Kelton,POR,0,0,2,0.00
-Rafael,POR,0,1,2,0.00
-Alex,POR,0,0,0,0
-Violas,POR,0,1,0,0.00
-Goncalo,POR,0,0,0,0
-B. Dias,POR,0,0,0,0
-J. Pinto,POR,0,0,0,0
-Tavares,POR,0,0,2,0.00
-Menezes,POR,0,0,0,0
-Andre,POR,0,1,6,0.00
-Onodera,JPN,0,0,0,0
-Miyaura,JPN,0,0,1,0.00
-Oya,JPN,0,0,3,0.00
-Kai,JPN,0,0,0,0
-Nishimoto,JPN,0,0,0,0
-Nishiyama,JPN,0,0,0,0
-Eiro,JPN,0,0,0,0
-Sato,JPN,0,0,0,0
-Tümer,TUR,0,0,1,0.00
-Matić,TUR,0,0,0,0
-A. Lagumdzija,TUR,0,0,1,0.00
-Hatipoğlu,TUR,0,0,0,0
-Yenipazar,TUR,0,0,0,0
-Muhammed K.,TUR,0,0,0,0
-Kirkit,TUR,0,0,2,0.00
-Can Koç,TUR,0,0,0,0
-Kaplan,TUR,0,0,0,0
-John,GER,0,0,2,0.00
-Grozer,GER,0,1,2,0.00
-Brehme,GER,0,0,1,0.00
-Peter,GER,0,0,0,0
-Zimmermann,GER,0,0,1,0.00
-Krage,GER,0,0,0,0
-Burggräf,GER,0,0,1,0.00
-Mohwinkel,GER,0,0,0,0
-Torwie,GER,0,0,0,0
-S. Nikolov,BUL,0,0,0,0
-Petkov,BUL,0,0,0,0
-Nachev,BUL,0,0,0,0
-Tatarov,BUL,0,0,0,0
-Zhelev,BUL,0,0,0,0
-Antov,BUL,0,0,0,0
-Palev,BUL,0,0,0,0
-Dobrev,BUL,0,0,0,0
-Keemink,NED,0,0,1,0.00
-Ahyi,NED,0,0,3,0.00
+Koops,NED,106,17,211,8.83
+Maique,BRA,88,17,189,5.87
+Graven,GER,73,12,140,6.08
+Qu Z.S.,CHN,71,16,165,5.46
+Boiko,UKR,68,12,185,5.67
+Možič,SLO,68,19,222,4.53
+Klok,NED,66,16,162,5.50
+Kovačič,SLO,66,17,145,4.71
+Ivović,SRB,64,22,163,5.33
+Morteza,IRI,61,11,162,6.10
+Ogawa,JPN,60,8,104,4.62
+Diez,FRA,60,13,114,4.62
+Palonsky,ARG,59,16,192,4.92
+Garcia,CUB,59,16,168,6.56
+Clevenot,FRA,58,15,126,4.46
+Yant,CUB,58,11,196,4.46
+Tuinstra,NED,53,11,133,4.42
+B. Bayraktar,TUR,53,18,199,4.42
+Hofer,CAN,53,18,158,4.42
+Vicentin,ARG,52,12,150,4.33
+Currie,CAN,52,13,122,4.33
+Röhrs,GER,51,19,197,4.25
+Balaso,ITA,51,6,122,4.64
+Tomita,JPN,50,7,77,3.85
+Robinson,USA,49,14,166,4.08
+Pothron,FRA,49,11,109,4.08
+L. Bergmann,BRA,48,16,189,3.20
+Lopez,CUB,48,12,102,3.69
+Honorato,BRA,47,9,182,3.13
+Szalpuk,POL,46,17,138,3.29
+Bozhilov,BUL,46,15,147,3.83
+A. Nikolov,BUL,46,19,191,3.83
+Michieletto,ITA,46,6,161,4.18
+Mašulović V.,SRB,45,20,152,5.00
+Kovalov,UKR,45,15,148,3.75
+Ristić,SRB,43,14,148,3.58
+Arman,IRI,42,4,60,3.50
+Ji D.S.,CHN,41,12,119,3.15
+Hazrat,IRI,40,8,96,3.33
+Mohwinkel,GER,39,4,112,3.25
+Louati,FRA,39,7,82,4.33
+Asparuhov,BUL,38,16,129,3.17
+Ewert,USA,37,10,117,3.08
+Semeniuk,POL,37,7,84,3.36
+Poriya,IRI,36,4,85,3.27
+Lavia,ITA,36,11,97,3.27
+Yu Y.T.,CHN,35,14,147,2.92
+Mandıracı,TUR,33,12,145,2.75
+Martinez Franchi,ARG,31,10,98,3.88
+Yanchuk,UKR,30,21,219,2.50
+Fornal,POL,30,8,69,4.29
+Porro L.,ITA,29,8,81,1.93
+Brand,GER,28,14,138,3.50
+Otsuka,JPN,26,3,84,3.25
+Camino,CUB,26,18,121,2.00
+J. Gutierrez,CUB,26,5,95,2.00
+Varga,CAN,26,8,78,2.60
+Briggs,USA,25,5,44,3.12
+Henno,FRA,25,4,64,2.78
+Danani,ARG,25,6,68,6.25
+Bottolo,ITA,24,3,56,1.60
+Champlin,USA,24,6,88,2.00
+Z. Štern,SLO,23,15,99,2.09
+Szymura,POL,22,4,46,5.50
+Ran,JPN,22,3,66,4.40
+Gierżot,POL,20,7,58,2.50
+Wang B.,CHN,20,9,93,1.54
+Bračko,SLO,20,11,74,1.33
+Kai,JPN,19,3,73,1.58
+Young,CAN,19,8,79,1.58
+Lucarelli,BRA,18,3,48,2.57
+Grebennikov,FRA,18,1,39,3.60
+Granieczny,POL,17,7,68,1.13
+Atanasov,BUL,17,7,55,1.42
+Heslinga,CAN,17,5,58,1.55
+Shoji,USA,16,3,37,2.29
+Ishikawa,JPN,16,1,76,4.00
+Gulmezoglu,TUR,15,5,91,1.88
+Duflos Rossi,FRA,15,1,24,1.88
+Armoa Morel,ARG,15,4,40,1.88
+Pace,ITA,14,2,27,1.27
+Laurenzano,ITA,13,4,59,1.62
+Arthur,BRA,13,7,46,1.00
+Popiwczak,POL,13,12,71,1.86
+Leon,POL,13,13,69,1.86
+Yamazaki,JPN,12,2,42,1.33
+Bedirhan,TUR,12,0,25,1.00
+Okroglič,SLO,12,12,34,0.80
+Martinez Gion,NED,12,2,36,1.50
+Czunkiewicz,POL,11,4,47,1.38
+Esfandiar,IRI,11,12,53,0.92
+Kozamernik,SLO,11,0,9,0.73
+Li T. Y.,CHN,10,4,37,0.77
+Brborić,SRB,10,4,57,0.91
+M. Lagumdzija,TUR,10,10,88,0.83
+Dagostino,USA,10,5,54,1.25
+Peter,GER,10,3,39,0.83
+Bednorz,POL,10,3,18,2.00
+Perić,SRB,9,4,50,1.12
+Poluian,UKR,9,7,57,0.75
+Adriano,BRA,9,2,38,0.60
+Zhai D.J.,CHN,8,11,45,0.62
+Bayram,TUR,8,4,21,1.33
+Tatarov,BUL,8,5,45,0.67
+Luengas,ARG,8,3,44,0.67
+Huetz,FRA,8,1,10,0.62
+Śliwka,POL,8,4,14,2.00
+Flexen,USA,7,9,29,0.88
+Daneshdoust,IRI,7,10,55,0.58
+Gyimah,CAN,7,0,15,0.58
+McCarthy,CAN,7,0,25,0.64
+Nedeljković,SRB,6,0,8,0.50
+Sani,ITA,6,9,38,1.50
+Ramon,FRA,6,0,8,0.75
+Haghparast,IRI,6,6,24,0.50
+Jakubiszak,POL,5,1,4,0.36
+Soshi,JPN,5,1,15,0.62
+Lui,CAN,5,0,8,0.42
+Hawryluk,POL,4,1,12,1.00
+Gargiulo,ITA,4,2,12,0.27
+Semeniuk,UKR,4,2,23,0.33
+Zerba,ARG,4,0,3,0.33
+John,GER,4,1,9,0.33
+Marovt,SLO,4,3,33,0.29
+Urnaut,SLO,4,2,45,1.00
+Yamamoto,JPN,4,0,9,0.80
+Van Der Ent,NED,3,0,5,0.25
+Kisiliuk,UKR,3,2,21,0.38
+Mohammad,IRI,3,2,7,0.27
+Maase,GER,3,3,16,0.38
+Mergarejo,CUB,3,4,16,0.23
+Šen,SLO,3,3,6,0.30
+Simón,CUB,3,0,7,0.60
+Nowak J.,POL,2,1,4,0.14
+Bak,NED,2,0,16,0.17
+Wiltenburg,NED,2,1,4,0.17
+Sato,JPN,2,0,9,0.15
+Gajović,SRB,2,0,1,0.17
+Savaş,TUR,2,0,2,0.17
+Yüksel,TUR,2,3,12,0.18
+Zhelev,BUL,2,0,5,0.17
+Anzani,ITA,2,1,9,0.18
+Todua,UKR,2,2,26,0.17
+Hobus,USA,2,0,1,0.17
+Conde,ARG,2,2,21,0.17
+Faure,FRA,2,0,2,0.15
+Judson,BRA,2,1,13,0.15
+Eisa,IRI,2,0,7,0.20
+Torwie,GER,2,2,17,0.17
+J. Elser,CAN,2,0,22,0.18
+Wassenaar Ketrzynski,CAN,2,1,15,0.17
+T. Štern,SLO,2,1,5,0.13
+Masso,CUB,2,0,10,0.15
+Alonso,CUB,2,3,4,0.15
+Pampushko,UKR,2,0,4,0.25
+Plak,NED,2,0,5,0.25
+Grozdanov,BUL,2,1,4,0.25
+Stefanović,SRB,2,0,3,0.25
+Pasteur,USA,2,6,39,0.50
+Kochanowski,POL,2,0,2,0.29
+Nasevich,POL,1,0,1,0.25
+Korenblek,NED,1,0,2,0.08
+Parkinson,NED,1,0,1,0.50
+Li Y.Z.,CHN,1,0,8,0.08
+Peng S.K.,CHN,1,1,3,0.12
+Nishimoto,JPN,1,0,1,0.11
+Negic,SRB,1,0,1,0.08
+Jovović,SRB,1,0,2,0.12
+Mašulović N.,SRB,1,1,10,0.08
+Kokeza,SRB,1,0,0,0.25
+Tümer,TUR,1,0,0,0.09
+Rychlicki,ITA,1,0,4,0.07
+Jendryk,USA,1,0,5,0.08
+Knigge,USA,1,0,8,0.08
+Gomez,ARG,1,0,3,0.10
+Loser Bruno,ARG,1,1,4,0.08
+Gueye,FRA,1,0,12,0.08
+Flavio,BRA,1,0,3,0.07
+Amin,IRI,1,2,7,0.10
+Yousef,IRI,1,0,2,0.09
+Böhme,GER,1,0,1,0.08
+Sclater,CAN,1,0,4,0.12
+Schnitzer,CAN,1,1,3,0.10
+Štalekar,SLO,1,0,15,0.07
+Kržič,SLO,1,0,1,0.07
+Concepcion,CUB,1,1,12,0.08
+Bisset,CUB,1,0,2,0.08
+Fiel,CUB,1,0,4,0.08
+Matić,TUR,1,0,5,0.09
+Alan,BRA,1,1,8,0.09
+Nishiyama,JPN,1,0,0,0.11
+A. Lagumdzija,TUR,1,1,2,0.25
+de Groot,NED,1,0,2,0.25
+Zaleszczyk,POL,0,0,0,0
+Sasak,POL,0,0,2,0.00
+Kozub,POL,0,0,0,0
+Poręba,POL,0,1,2,0.00
+Firlej,POL,0,0,3,0.00
+Keemink,NED,0,0,3,0.00
+Ahyi,NED,0,0,2,0.00
 Meijs,NED,0,0,0,0
-Plak,NED,0,0,1,0.00
-Berkhout,NED,0,0,0,0
-Wijkstra,NED,0,0,0,0
-Wiltenburg,NED,0,0,0,0
-Y. Oughlaf,QAT,0,1,3,0.00
-Pape,QAT,0,0,2,0.00
-M. Alkuwari,QAT,0,1,1,0.00
-Bobby,QAT,0,1,0,0.00
-Ibrahim,QAT,0,0,2,0.00
-Abdallah,QAT,0,0,0,0
-Mahdi,QAT,0,0,0,0
-Marovt,SLO,0,0,1,0.00
-Bračko,SLO,0,1,7,0.00
-Štalekar,SLO,0,0,1,0.00
-Ropret,SLO,0,0,1,0.00
-Urnaut,SLO,0,0,0,0
-Kržič,SLO,0,0,0,0
-Najdič,SLO,0,0,0,0
-Araya,CHI,0,0,0,0
-Albornoz,CHI,0,0,1,0.00
-Mardones,CHI,0,0,0,0
-Valenzuela,CHI,0,0,2,0.00
-Banda,CHI,0,1,0,0.00
-Komenda,POL,0,0,2,0.00
-Kurek,POL,0,0,0,0
-Szalpuk,POL,0,0,5,0.00
-Kochanowski,POL,0,0,0,0
-Granieczny,POL,0,0,3,0.00
-Jakubiszak,POL,0,0,0,0
-Sasak,POL,0,0,0,0
-Nowak J.,POL,0,0,0,0
-Firlej,POL,0,0,0,0
-Huber,POL,0,0,4,0.00
-Constantin,ROU,0,0,0,0
-Dumitru,ROU,0,0,1,0.00
-Balean,ROU,0,1,8,0.00
-Magdas,ROU,0,0,3,0.00
-Butnaru,ROU,0,0,0,0
-Kantor,ROU,0,2,6,0.00
-Lupu,ROU,0,0,0,0
-Ionescu,ROU,0,0,1,0.00
-Sanchez Pages,ARG,0,0,0,0
-Gallego,ARG,0,0,0,0
-Gomez,ARG,0,0,0,0
-De Cecco,ARG,0,0,1,0.00
-Zerba,ARG,0,0,1,0.00
-Luengas,ARG,0,0,0,0
-Giraudo,ARG,0,0,0,0
-Tervaportti,FIN,0,0,0,0
-Haapaniemi,FIN,0,0,0,0
-Jokela,FIN,0,1,3,0.00
-Breilin,FIN,0,0,0,0
-Lindqvist,FIN,0,0,0,0
-Kaunisto,FIN,0,0,0,0
-Ivanov,FIN,0,0,1,0.00
-Saadat,IRI,0,0,0,0
-Esfandiar,IRI,0,0,0,0
-A. Ramezani,IRI,0,0,0,0
-Arshia,IRI,0,0,1,0.00
-Hajipour,IRI,0,0,1,0.00
-Yousef,IRI,0,0,1,0.00
-Haghparast,IRI,0,1,3,0.00
-Mohammad,IRI,0,0,3,0.00
-Eisa,IRI,0,0,0,0
-Hamada,EGY,0,0,0,0
-Z. Osama,EGY,0,0,0,0
-M. Ramadan,EGY,0,0,0,0
-Asran,EGY,0,0,0,0
-Yasso,EGY,0,0,0,0
-Seif Abed,EGY,0,0,0,0
-Azab,EGY,0,0,3,0.00
-A.Ellakany,EGY,0,0,0,0
-A.Elshahat,EGY,0,0,0,0
-Drozd,UKR,0,1,0,0.00
-Synytsia,UKR,0,0,0,0
-Semeniuk,UKR,0,0,2,0.00
-Tupchii,UKR,0,0,0,0
-Shchytkov,UKR,0,0,0,0
-Poluian,UKR,0,0,1,0.00
-Kisiliuk,UKR,0,0,0,0
-Pampushko,UKR,0,0,5,0.00
-Todua,UKR,0,0,0,0
-Uryvkin,UKR,0,0,0,0
-Koval,UKR,0,0,0,0
-Reggers,BEL,0,0,1,0.00
-D'Hulst,BEL,0,0,1,0.00
-Plaskie,BEL,0,0,0,0
-D'heer,BEL,0,0,1,0.00
-Desmet,BEL,0,0,0,0
-V. Hoyweghen,BEL,0,0,0,0
-Verwimp K.,BEL,0,0,1,0.00
-Dermaux,BEL,0,0,0,0
-Fafchamps,BEL,0,0,0,0
-Perin,BEL,0,0,0,0
-Nikolić,SRB,0,0,0,0
-Mašulović V.,SRB,0,0,0,0
-Ivović,SRB,0,0,0,0
-Jovović,SRB,0,0,0,0
-Gajović,SRB,0,0,0,0
-Mašulović N.,SRB,0,0,0,0
-Luburić,SRB,0,0,0,0
-Stefanović,SRB,0,0,1,0.00
-Todorović,SRB,0,0,0,0
-Brborić,SRB,0,0,1,0.00
-Nedeljković,SRB,0,0,2,0.00
-Drahonovsky,CZE,0,0,0,0
-Bartunek,CZE,0,0,0,0
-Licek,CZE,0,0,1,0.00
-Srb,CZE,0,0,0,0
-Sotola,CZE,0,0,0,0
-Kovarik,CZE,0,0,0,0
-Indra,CZE,0,0,1,0.00
-Polak,CZE,0,0,0,0
-Klimes,CZE,0,1,0,0.00
-Benda,CZE,0,0,0,0
-Chinenyeze,FRA,0,0,1,0.00
-Patry,FRA,0,0,0,0
-Toniutti,FRA,0,0,0,0
-Brizard,FRA,0,0,0,0
-Le Goff,FRA,0,0,0,0
-Diez,FRA,0,0,0,0
-Faure,FRA,0,0,0,0
-Jouffroy,FRA,0,0,0,0
-Huetz,FRA,0,0,0,0
-Youngseok,KOR,0,0,0,0
-Taekeui,KOR,0,0,0,0
-Taejun,KOR,0,0,0,0
-Jiwon,KOR,0,0,1,0.00
-Sungjin,KOR,0,0,2,0.00
-Gyeongbok,KOR,0,5,10,0.00
-Donghyeok,KOR,0,0,2,0.00
-Hojin,KOR,0,0,0,0
-Jihan,KOR,0,0,0,0
-Alan,BRA,0,0,0,0
-Matheus G.,BRA,0,0,0,0
-Adriano,BRA,0,0,0,0
-Matheus,BRA,0,0,0,0
-Judson,BRA,0,0,0,0
-Fernando,BRA,0,0,0,0
-L. Bergmann,BRA,0,0,0,0
-Flavio,BRA,0,0,2,0.00
-Chizoba,BRA,0,0,0,0
-Darlan,BRA,0,0,0,0
-Wen Z. H.,CHN,0,0,0,0
-Jiang C.,CHN,0,0,0,0
-Wang H.B.,CHN,0,0,0,0
-Li L.,CHN,0,1,7,0.00
-Yu Y.T.,CHN,0,0,5,0.00
-Yu Y.C.,CHN,0,0,1,0.00
-Li Y.Z.,CHN,0,0,2,0.00
+Berkhout,NED,0,0,1,0.00
+Wijkstra,NED,0,0,5,0.00
+Lipke,NED,0,0,0,0
+Wen Z. H.,CHN,0,0,3,0.00
+Jiang C.,CHN,0,1,3,0.00
+Wang H.B.,CHN,0,0,1,0.00
+Yu Y.C.,CHN,0,0,5,0.00
 Zhang Z.J.,CHN,0,0,0,0
-Peng S.K.,CHN,0,0,1,0.00
-Li T. Y.,CHN,0,0,0,0
+Rao S.H.,CHN,0,1,6,0.00
+Miyaura,JPN,0,1,7,0.00
+Oya,JPN,0,0,1,0.00
+Murayama,JPN,0,0,4,0.00
+Larry,JPN,0,0,10,0.00
+Keihan,JPN,0,0,0,0
+Shimokawa,JPN,0,0,0,0
+Nikolić,SRB,0,0,0,0
+Luburić,SRB,0,2,1,0.00
+Todorović,SRB,0,3,1,0.00
+Gürbüz,TUR,0,1,0,0.00
+Ertuğrul Gazi,TUR,0,0,0,0
+Hatipoğlu,TUR,0,0,0,0
+Yenipazar,TUR,0,1,0,0.00
+Hilmi,TUR,0,0,0,0
+S. Nikolov,BUL,0,0,4,0.00
+Georgiev,BUL,0,0,2,0.00
+Petkov,BUL,0,0,3,0.00
+Nachev,BUL,0,0,0,0
+Karyagin,BUL,0,0,0,0
+Antov,BUL,0,1,0,0.00
+Palev,BUL,0,0,3,0.00
+Recine,ITA,0,0,5,0.00
+Giannelli,ITA,0,0,8,0.00
+Cortesia,ITA,0,0,0,0
+Romanò,ITA,0,0,2,0.00
+Sanguinetti,ITA,0,0,4,0.00
+Boninfante,ITA,0,1,0,0.00
+Synytsia,UKR,0,0,1,0.00
+Tupchii,UKR,0,0,2,0.00
+Shchytkov,UKR,0,0,2,0.00
+Nalozhnyi,UKR,0,1,4,0.00
+Chelenyak,UKR,0,0,0,0
+Uryvkin,UKR,0,0,0,0
+Koval,UKR,0,0,2,0.00
+Isaacson,USA,0,0,2,0.00
+Garcia,USA,0,1,1,0.00
+Rowan,USA,0,0,0,0
+Gasman,USA,0,0,1,0.00
+McHenry,USA,0,1,3,0.00
+Sanchez Pages,ARG,0,0,9,0.00
+Gallego,ARG,0,1,10,0.00
+Scarpa,ARG,0,0,0,0
+Kukartsev,ARG,0,0,4,0.00
+Maciel,ARG,0,0,0,0
+Giraudo,ARG,0,0,4,0.00
+Tizi-Oualou,FRA,0,0,3,0.00
+Strehlau,FRA,0,0,0,0
+Chaboissant,FRA,0,0,1,0.00
+Magnin,FRA,0,0,1,0.00
+Feral,FRA,0,0,0,0
+Matheus G.,BRA,0,0,1,0.00
+Sabino,BRA,0,0,0,0
+Thiery,BRA,0,0,2,0.00
+Fernando,BRA,0,1,1,0.00
+Maicon,BRA,0,0,0,0
+Alexandre,BRA,0,0,0,0
+Darlan,BRA,0,0,1,0.00
+Saadat,IRI,0,3,4,0.00
+Javad,IRI,0,0,0,0
+Arshia,IRI,0,2,2,0.00
+Kunstmann,GER,0,0,1,0.00
+Zimmermann,GER,0,1,3,0.00
+Burggräf,GER,0,0,0,0
+Eckardt,GER,0,0,0,0
+Meier,GER,0,0,0,0
+Korreck,GER,0,0,0,0
+Herr,CAN,0,0,1,0.00
+Greves,CAN,0,0,0,0
+Elgert,CAN,0,1,3,0.00
+Vinčić,SLO,0,0,0,0
+Mujanović,SLO,0,1,5,0.00
+Najdič,SLO,0,0,1,0.00
+Gonzalez,CUB,0,0,0,0
+Gomez,CUB,0,0,3,0.00
+Thondike,CUB,0,0,2,0.00
+Matheus,BRA,0,0,2,0.00
+Chizoba,BRA,0,0,0,0
+Matin,IRI,0,0,2,0.00
+Eiro,JPN,0,0,2,0.00
+Diaz,ARG,0,0,0,0
+Ariakhah,IRI,0,0,0,0
+Dilmenler,TUR,0,0,0,0
+Kulpinac,SRB,0,0,1,0.00
+Planinšič,SLO,0,1,2,0.00
+Yevstratov,UKR,0,0,0,0
+Tevkun,UKR,0,0,0,0
+Chinenyeze,FRA,0,0,2,0.00
+Patry,FRA,0,0,0,0
+Brizard,FRA,0,0,3,0.00
+Tille,GER,0,0,0,0
+Krage,GER,0,0,0,0
+Thiago,CUB,0,0,0,0
+D. Dimitrov,BUL,0,0,0,0
+Miwa,JPN,0,2,1,0.00
 Sbertoli,ITA,0,0,0,0
-Sani,ITA,0,0,0,0
-Rychlicki,ITA,0,0,0,0
-Galassi,ITA,0,0,0,0
-Gargiulo,ITA,0,0,2,0.00
-Pace,ITA,0,0,0,0
-Porro L.,ITA,0,0,2,0.00
-Bouyoucef,ALG,0,1,3,0.00
-Zerouka,ALG,0,1,2,0.00
-Amrat,ALG,0,0,0,0
-Kadri,ALG,0,0,0,0
-Ikken,ALG,0,0,0,0
-Chikhi,ALG,0,0,0,0
-Bourouba,ALG,0,0,0,0
-Dekkiche A,ALG,0,0,0,0
-Hamimes,ALG,0,0,0,0
+Galassi,ITA,0,1,11,0.00
+Komenda,POL,0,0,0,0
+Adamczyk,POL,0,0,1,0.00
+Gomułka,POL,0,0,0,0
+Milanović,SRB,0,0,0,0
+Miao R.T.,CHN,0,0,1,0.00
+Ensing,USA,0,0,0,0
+Holdaway,USA,0,0,0,0
+Ma'a,USA,0,0,1,0.00
+Kirkit,TUR,0,1,3,0.00
+Goto,JPN,0,1,1,0.00
+Can Koç,TUR,0,0,0,0
+Telkiyski,BUL,0,0,0,0
+Onodera,JPN,0,0,2,0.00
+Lima B.,ARG,0,0,1,0.00
+Muhammed K.,TUR,0,0,0,0
+Marshman,USA,0,0,0,0
+Grozer,GER,0,0,0,0
+Krick,GER,0,0,3,0.00
+Toniutti,FRA,0,0,0,0
+Le Goff,FRA,0,0,0,0
+D. Kolev,BUL,0,0,0,0
+Bovolenta,ITA,0,0,2,0.00
+Caneschi,ITA,0,0,0,0
+Bołądź,POL,0,0,0,0
+Canham,CAN,0,0,2,0.00
+Pajenk,SLO,0,0,0,0
+Salazar,ARG,0,0,1,0.00
+Yamauchi,JPN,0,0,0,0
+Carle,FRA,0,0,0,0
+Howe,CAN,0,0,1,0.00

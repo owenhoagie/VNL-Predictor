@@ -2,7 +2,7 @@
 website_configs = [
     {
         "name": "attacking",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-attackers/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-attackers/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
@@ -18,7 +18,7 @@ website_configs = [
     },
     {
         "name": "blocking",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-blockers/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-blockers/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
@@ -34,7 +34,7 @@ website_configs = [
     },
     {
         "name": "serving",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-servers/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-servers/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
@@ -51,7 +51,7 @@ website_configs = [
     },
     {
         "name": "setting",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-setters/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-setters/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
@@ -67,7 +67,7 @@ website_configs = [
     },
     {
         "name": "defense",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-diggers/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-diggers/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
@@ -83,7 +83,7 @@ website_configs = [
     },
     {
         "name": "receiving",
-        "url": "https://en.volleyballworld.com/volleyball/competitions/men-world-championship/statistics/best-receivers/",
+        "url": "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-receivers/",
         "header_map": {
             "rank": "Rank",
             "playername": "Player Name",
