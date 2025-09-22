@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 const STAT_GROUPS = [
   'Attacking',
@@ -17,6 +17,7 @@ export type StatGroupFilterProps = {
 
 export default function StatGroupFilter({ selected, onChange }: StatGroupFilterProps) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -28,6 +29,12 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
     return () => document.removeEventListener('mousedown', onDocClick);
   }, []);
 
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return STAT_GROUPS;
+    return STAT_GROUPS.filter((g) => g.toLowerCase().includes(q));
+  }, [query]);
+
   const toggle = (group: string) => {
     if (selected.includes(group)) {
       onChange(selected.filter((g) => g !== group));
@@ -35,6 +42,8 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
       onChange([...selected, group]);
     }
   };
+
+  const clearAll = () => onChange([]);
 
   return (
     <div className="ms" ref={containerRef}>
@@ -46,9 +55,10 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
           )}
           {selected.length > 0 && (
             <div className="ms-chips">
-              {selected.map((g) => (
+              {selected.slice(0, 3).map((g) => (
                 <span key={g} className="chip">{g}</span>
               ))}
+              {selected.length > 3 && <span className="chip">+{selected.length - 3}</span>}
             </div>
           )}
         </div>
@@ -56,8 +66,17 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
       </button>
       {open && (
         <div className="ms-panel">
+          <div className="ms-actions">
+            <input
+              className="ms-search"
+              placeholder="Search..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button type="button" className="reset" onClick={clearAll}>Clear</button>
+          </div>
           <div className="ms-list" role="listbox" aria-multiselectable>
-            {STAT_GROUPS.map((group) => {
+            {filtered.map((group) => {
               const checked = selected.includes(group);
               return (
                 <label key={group} className={"ms-item" + (checked ? " is-checked" : "")}> 
@@ -70,6 +89,9 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
                 </label>
               );
             })}
+            {filtered.length === 0 && (
+              <div className="ms-empty">No results</div>
+            )}
           </div>
         </div>
       )}

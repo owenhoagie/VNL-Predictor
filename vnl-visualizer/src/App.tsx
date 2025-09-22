@@ -152,7 +152,7 @@ function App() {
   }, [])
 
   const teams = useMemo(() => Array.from(new Set(rawData.map((r) => r.Team))).sort(), [rawData])
-  const positions = useMemo(() => Array.from(new Set(rawData.map((r) => r.Position))).sort(), [rawData])
+  const positions = useMemo(() => Array.from(new Set(rawData.map((r) => r.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())))).sort(), [rawData])
 
   const ageMinMax = useMemo(() => {
     const vals = rawData.map((r) => r.Age).filter((n) => Number.isFinite(n))
@@ -177,7 +177,7 @@ function App() {
   const filtered = useMemo(() => {
     return rawData.filter((r) => {
       if (teamsSelected.length > 0 && !teamsSelected.includes(r.Team)) return false
-      if (positionsSelected.length > 0 && !positionsSelected.includes(r.Position)) return false
+  if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
       if (Number.isFinite(r.Age)) {
         if (r.Age < ageRange[0] || r.Age > ageRange[1]) return false
       }
@@ -402,7 +402,7 @@ function App() {
                     <div className="cardTitle">{selected['Player Name']}</div>
                     <div className="row">
                       <span className="chip">Team: {selected.Team}</span>
-                      <span className="chip">Position: {selected.Position}</span>
+                      <span className="chip">Position: {selected.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())}</span>
                       <span className="chip">Age: {selected.Age}</span>
                       <span className="chip">Height: {selected.Height} cm</span>
                       <span className="chip">{xKey}: {selected[xKey]}</span>
