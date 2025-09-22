@@ -1,3 +1,24 @@
+// Country code to name mapping
+const COUNTRY_NAMES: Record<string, string> = {
+  ARG: 'Argentina',
+  BRA: 'Brazil',
+  BUL: 'Bulgaria',
+  CAN: 'Canada',
+  CHN: 'China',
+  CUB: 'Cuba',
+  FRA: 'France',
+  GER: 'Germany',
+  IRI: 'Iran',
+  ITA: 'Italy',
+  JPN: 'Japan',
+  NED: 'Netherlands',
+  POL: 'Poland',
+  SLO: 'Slovenia',
+  SRB: 'Serbia',
+  TUR: 'Turkey',
+  UKR: 'Ukraine',
+  USA: 'USA',
+};
 import { useEffect, useMemo, useState } from 'react'
 import Papa from 'papaparse'
 import { Chart, registerables } from 'chart.js'
@@ -151,7 +172,8 @@ function App() {
       })
   }, [])
 
-  const teams = useMemo(() => Array.from(new Set(rawData.map((r) => r.Team))).sort(), [rawData])
+  // For dropdown: show full country names
+  const teams = useMemo(() => Array.from(new Set(rawData.map((r) => COUNTRY_NAMES[r.Team] || r.Team))).sort(), [rawData])
   const positions = useMemo(() => Array.from(new Set(rawData.map((r) => r.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())))).sort(), [rawData])
 
   const ageMinMax = useMemo(() => {
@@ -176,7 +198,7 @@ function App() {
 
   const filtered = useMemo(() => {
     return rawData.filter((r) => {
-      if (teamsSelected.length > 0 && !teamsSelected.includes(r.Team)) return false
+  if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.entries(COUNTRY_NAMES).find(([code, name]) => name === t)?.[0] || t).includes(r.Team)) return false
   if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
       if (Number.isFinite(r.Age)) {
         if (r.Age < ageRange[0] || r.Age > ageRange[1]) return false
@@ -401,7 +423,7 @@ function App() {
                   <div className="card">
                     <div className="cardTitle">{selected['Player Name']}</div>
                     <div className="row">
-                      <span className="chip">Team: {selected.Team}</span>
+                      <span className="chip">Team: {COUNTRY_NAMES[selected.Team] || selected.Team}</span>
                       <span className="chip">Position: {selected.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())}</span>
                       <span className="chip">Age: {selected.Age}</span>
                       <span className="chip">Height: {selected.Height} cm</span>
