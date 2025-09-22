@@ -16,8 +16,10 @@ html, body, #root {
 
 body {
   margin: 0;
-  background: radial-gradient(1200px 700px at 20% -10%, #1b2445 0%, #0b1020 60%), var(--bg);
+  background: radial-gradient(ellipse 1200px 700px at 50% 0px, #182a4d 0%, #10182c 70%, #0b1020 100%);
   color: var(--text);
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 24px; }

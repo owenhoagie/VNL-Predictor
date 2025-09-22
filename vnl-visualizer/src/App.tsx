@@ -380,7 +380,7 @@ function App() {
             <div className="chip">X: {xKey} · Y: {yKey}</div>
           </div>
           {loading && (
-            <div className="chartWrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)' }}>Loading data…</div>
+            <div className="chartWrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', marginTop: 48 }}>Loading data…</div>
           )}
           {!loading && error && (
             <div className="chartWrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6b6b' }}>{error}</div>

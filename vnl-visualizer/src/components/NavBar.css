@@ -1,0 +1,115 @@
+/* Modern seamless navbar styles */
+.navbar {
+  width: 100%;
+  background: linear-gradient(90deg, #10182c 0%, #182a4d 100%);
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(30,40,80,0.10);
+  height: 64px;
+}
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+}
+.navbar-logo {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(30,40,80,0.10);
+}
+.navbar-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  transition: max-height 0.3s;
+}
+.navbar-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.navbar-links a.active {
+  border-bottom: 2px solid #6ea8fe;
+  color: #6ea8fe;
+}
+.navbar-links a:hover {
+  border-bottom: 2px solid #6ea8fe;
+  color: #6ea8fe;
+}
+.navbar-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  margin-left: 16px;
+}
+.navbar-hamburger .bar {
+  width: 28px;
+  height: 3px;
+  background: #fff;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+@media (max-width: 700px) {
+  .navbar-content {
+    padding: 0 8px;
+  }
+  .navbar-logo {
+    font-size: 1.2rem;
+    max-width: 60vw;
+  }
+  .navbar-links {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100vw;
+    background: #1b2445;
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
+    padding: 12px 24px;
+    max-height: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(30,40,80,0.10);
+  }
+  .navbar-links.open {
+    max-height: 200px;
+    overflow: visible;
+  }
+  .navbar-links a {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-bottom: none;
+    border-left: 4px solid transparent;
+  }
+  .navbar-links a.active {
+    border-left: 4px solid #6ea8fe;
+    color: #6ea8fe;
+  }
+  .navbar-hamburger {
+    display: flex;
+  }
+}
