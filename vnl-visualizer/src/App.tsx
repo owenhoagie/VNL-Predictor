@@ -198,7 +198,7 @@ function App() {
 
   const filtered = useMemo(() => {
     return rawData.filter((r) => {
-  if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.entries(COUNTRY_NAMES).find(([code, name]) => name === t)?.[0] || t).includes(r.Team)) return false
+  if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.keys(COUNTRY_NAMES).find(k => COUNTRY_NAMES[k] === t) || t).includes(r.Team)) return false
   if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
       if (Number.isFinite(r.Age)) {
         if (r.Age < ageRange[0] || r.Age > ageRange[1]) return false
