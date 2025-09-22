@@ -3,6 +3,8 @@ import Papa from 'papaparse'
 import { Chart, registerables } from 'chart.js'
 import { Scatter } from 'react-chartjs-2'
 import MultiSelect from './components/MultiSelect'
+import StatAxisSelect from './components/StatAxisSelect'
+import StatGroupFilter from './components/StatGroupFilter'
 Chart.register(...registerables)
 
 type PlayerRecord = {
@@ -97,6 +99,7 @@ function App() {
   const [heightRange, setHeightRange] = useState<[number, number]>([150, 230])
   const [xKey, setXKey] = useState<AxisKey>('Age')
   const [yKey, setYKey] = useState<AxisKey>('Kills')
+  const [statGroupsSelected, setStatGroupsSelected] = useState<string[]>([])
 
   useEffect(() => {
     fetch('/merged_stats.csv')
@@ -347,20 +350,28 @@ function App() {
             </div>
           </div>
           <div className="section">
-            <label className="label">X Axis</label>
-            <select className="select" value={xKey} onChange={(e) => setXKey(e.target.value as AxisKey)}>
-              {numericAxes.map((k) => (
-                <option key={k} value={k}>{k}</option>
-              ))}
-            </select>
+            <StatGroupFilter
+              selected={statGroupsSelected}
+              onChange={setStatGroupsSelected}
+            />
           </div>
           <div className="section">
-            <label className="label">Y Axis</label>
-            <select className="select" value={yKey} onChange={(e) => setYKey(e.target.value as AxisKey)}>
-              {numericAxes.map((k) => (
-                <option key={k} value={k}>{k}</option>
-              ))}
-            </select>
+            <StatAxisSelect
+              label="X Axis"
+              value={xKey}
+              onChange={v => setXKey(v as AxisKey)}
+              placeholder="Select X axis stat"
+              statGroups={statGroupsSelected}
+            />
+          </div>
+          <div className="section">
+            <StatAxisSelect
+              label="Y Axis"
+              value={yKey}
+              onChange={v => setYKey(v as AxisKey)}
+              placeholder="Select Y axis stat"
+              statGroups={statGroupsSelected}
+            />
           </div>
         </aside>
         <section className="panel">
