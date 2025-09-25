@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 
 const STAT_GROUPS = [
+  'Ratings',
+  'General',
   'Attacking',
   'Blocking',
   'Serving',
   'Setting',
   'Defense',
   'Receiving',
-  'Other',
 ];
 
 export type StatGroupFilterProps = {

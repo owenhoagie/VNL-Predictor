@@ -1,13 +1,25 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 
 const STAT_GROUPS = [
+  {
+    name: 'Ratings',
+    stats: [
+      'Impact',
+      'Attacking Rating',
+      'Blocking Rating',
+      'Serving Rating',
+      'Setting Rating',
+      'Defense Rating',
+      'Receiving Rating',
+    ],
+  },
+  { name: 'General', stats: ['Age', 'Height'] },
   { name: 'Attacking', stats: ['Kills', 'Attacking Errors', 'Attacking Attempts', 'Attacks Per Match'] },
   { name: 'Blocking', stats: ['Blocks', 'Blocking Errors', 'Rebounds', 'Blocks Per Match'] },
   { name: 'Serving', stats: ['Aces', 'Service Errors', 'Service Attempts', 'Serves Per Match'] },
   { name: 'Setting', stats: ['Running Sets', 'Setting Errors', 'Still Sets', 'Sets Per Match'] },
   { name: 'Defense', stats: ['Great Saves', 'Defensive Errors', 'Digs Per Match', 'Defensive Receptions'] },
   { name: 'Receiving', stats: ['Successful Receives', 'Receiving Errors', 'Service Receptions', 'Receives Per Match'] },
-  { name: 'Other', stats: ['Age', 'Height'] },
 ];
 
 export type StatAxisSelectProps = {

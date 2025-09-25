@@ -34,33 +34,55 @@ type PlayerRecord = {
   'Position': string
   'Age': number
   'Height': number
-  'Running Sets': number
-  'Setting Errors': number
-  'Still Sets': number
-  'Sets Per Match': number
-  'Successful Receives': number
-  'Receiving Errors': number
-  'Service Receptions': number
-  'Receives Per Match': number
-  'Aces': number
-  'Service Errors': number
-  'Service Attempts': number
-  'Serves Per Match': number
-  'Blocks': number
-  'Blocking Errors': number
-  'Rebounds': number
-  'Blocks Per Match': number
-  'Great Saves': number
-  'Defensive Errors': number
-  'Defensive Receptions': number
-  'Digs Per Match': number
+  // Ratings
+  'Impact': number
+  'Attacking Rating': number
+  'Blocking Rating': number
+  'Serving Rating': number
+  'Setting Rating': number
+  'Defense Rating': number
+  'Receiving Rating': number
+  // Attacking stats
   'Kills': number
   'Attacking Errors': number
   'Attacking Attempts': number
   'Attacks Per Match': number
+  // Blocking stats
+  'Blocks': number
+  'Blocking Errors': number
+  'Rebounds': number
+  'Blocks Per Match': number
+  // Serving stats
+  'Aces': number
+  'Service Errors': number
+  'Service Attempts': number
+  'Serves Per Match': number
+  // Setting stats
+  'Running Sets': number
+  'Setting Errors': number
+  'Still Sets': number
+  'Sets Per Match': number
+  // Defense stats
+  'Great Saves': number
+  'Defensive Errors': number
+  'Defensive Receptions': number
+  'Digs Per Match': number
+  // Receiving stats
+  'Successful Receives': number
+  'Receiving Errors': number
+  'Service Receptions': number
+  'Receives Per Match': number
 }
 
 const numericAxes = [
+  // Ratings (new stat group)
+  'Impact',
+  'Attacking Rating',
+  'Blocking Rating',
+  'Serving Rating',
+  'Setting Rating',
+  'Defense Rating',
+  'Receiving Rating',
   // Age / Height
   'Age',
   'Height',
@@ -110,6 +132,50 @@ function getDisplayLabel(key: string): string {
   return key;
 }
 
+// Stat groups for dropdowns
+const statGroups: { label: string; stats: AxisKey[] }[] = [
+  {
+    label: 'Ratings',
+    stats: [
+      'Impact',
+      'Attacking Rating',
+      'Blocking Rating',
+      'Serving Rating',
+      'Setting Rating',
+      'Defense Rating',
+      'Receiving Rating',
+    ],
+  },
+  {
+    label: 'General',
+    stats: ['Age', 'Height'],
+  },
+  {
+    label: 'Attacking',
+    stats: ['Kills', 'Attacking Errors', 'Attacking Attempts', 'Attacks Per Match'],
+  },
+  {
+    label: 'Blocking',
+    stats: ['Blocks', 'Blocking Errors', 'Rebounds', 'Blocks Per Match'],
+  },
+  {
+    label: 'Serving',
+    stats: ['Aces', 'Service Errors', 'Service Attempts', 'Serves Per Match'],
+  },
+  {
+    label: 'Setting',
+    stats: ['Running Sets', 'Setting Errors', 'Still Sets', 'Sets Per Match'],
+  },
+  {
+    label: 'Defense',
+    stats: ['Great Saves', 'Defensive Errors', 'Digs Per Match', 'Defensive Receptions'],
+  },
+  {
+    label: 'Receiving',
+    stats: ['Successful Receives', 'Receiving Errors', 'Service Receptions', 'Receives Per Match'],
+  },
+]
+
 function App() {
   const [rawData, setRawData] = useState<PlayerRecord[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -137,30 +203,44 @@ function App() {
           'Position': r['Position'],
           'Age': Number(r['Age']),
           'Height': parseHeightToNumber(String(r['Height'])),
-          'Running Sets': Number(r['Running Sets']),
-          'Setting Errors': Number(r['Setting Errors']),
-          'Still Sets': Number(r['Still Sets']),
-          'Sets Per Match': Number(r['Sets Per Match']),
-          'Successful Receives': Number(r['Successful Receives']),
-          'Receiving Errors': Number(r['Receiving Errors']),
-          'Service Receptions': Number(r['Service Receptions']),
-          'Receives Per Match': Number(r['Receives Per Match']),
-          'Aces': Number(r['Aces']),
-          'Service Errors': Number(r['Service Errors']),
-          'Service Attempts': Number(r['Service Attempts']),
-          'Serves Per Match': Number(r['Serves Per Match']),
-          'Blocks': Number(r['Blocks']),
-          'Blocking Errors': Number(r['Blocking Errors']),
-          'Rebounds': Number(r['Rebounds']),
-          'Blocks Per Match': Number(r['Blocks Per Match']),
-          'Great Saves': Number(r['Great Saves']),
-          'Defensive Errors': Number(r['Defensive Errors']),
-          'Defensive Receptions': Number(r['Defensive Receptions']),
-          'Digs Per Match': Number(r['Digs Per Match']),
+          // Ratings
+          'Impact': Number(r['Impact']),
+          'Attacking Rating': Number(r['Attacking Rating']),
+          'Blocking Rating': Number(r['Blocking Rating']),
+          'Serving Rating': Number(r['Serving Rating']),
+          'Setting Rating': Number(r['Setting Rating']),
+          'Defense Rating': Number(r['Defense Rating']),
+          'Receiving Rating': Number(r['Receiving Rating']),
+          // Attacking stats
           'Kills': Number(r['Kills']),
           'Attacking Errors': Number(r['Attacking Errors']),
           'Attacking Attempts': Number(r['Attacking Attempts']),
           'Attacks Per Match': Number(r['Attacks Per Match']),
+          // Blocking stats
+          'Blocks': Number(r['Blocks']),
+          'Blocking Errors': Number(r['Blocking Errors']),
+          'Rebounds': Number(r['Rebounds']),
+          'Blocks Per Match': Number(r['Blocks Per Match']),
+          // Serving stats
+          'Aces': Number(r['Aces']),
+          'Service Errors': Number(r['Service Errors']),
+          'Service Attempts': Number(r['Service Attempts']),
+          'Serves Per Match': Number(r['Serves Per Match']),
+          // Setting stats
+          'Running Sets': Number(r['Running Sets']),
+          'Setting Errors': Number(r['Setting Errors']),
+          'Still Sets': Number(r['Still Sets']),
+          'Sets Per Match': Number(r['Sets Per Match']),
+          // Defense stats
+          'Great Saves': Number(r['Great Saves']),
+          'Defensive Errors': Number(r['Defensive Errors']),
+          'Defensive Receptions': Number(r['Defensive Receptions']),
+          'Digs Per Match': Number(r['Digs Per Match']),
+          // Receiving stats
+          'Successful Receives': Number(r['Successful Receives']),
+          'Receiving Errors': Number(r['Receiving Errors']),
+          'Service Receptions': Number(r['Service Receptions']),
+          'Receives Per Match': Number(r['Receives Per Match']),
         }))
         setRawData(normalized)
         setLoading(false)
@@ -198,17 +278,20 @@ function App() {
 
   const filtered = useMemo(() => {
     return rawData.filter((r) => {
-  if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.keys(COUNTRY_NAMES).find(k => COUNTRY_NAMES[k] === t) || t).includes(r.Team)) return false
-  if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
+      if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.keys(COUNTRY_NAMES).find(k => COUNTRY_NAMES[k] === t) || t).includes(r.Team)) return false
+      if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
       if (Number.isFinite(r.Age)) {
         if (r.Age < ageRange[0] || r.Age > ageRange[1]) return false
       }
       if (Number.isFinite(r.Height)) {
         if (r.Height < heightRange[0] || r.Height > heightRange[1]) return false
       }
+      // If axis is a rating, filter out NaN or missing values
+      if (numericAxes.includes(xKey as AxisKey) && r[xKey as AxisKey] == null) return false;
+      if (numericAxes.includes(yKey as AxisKey) && r[yKey as AxisKey] == null) return false;
       return true
     })
-  }, [rawData, teamsSelected, positionsSelected, ageRange, heightRange])
+  }, [rawData, teamsSelected, positionsSelected, ageRange, heightRange, xKey, yKey])
 
   const chartPoints = useMemo(() => {
     return filtered

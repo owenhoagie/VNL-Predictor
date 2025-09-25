@@ -17,6 +17,13 @@ const statLabels: Record<string, string> = {
   "Position": "Position",
   "Age": "Age",
   "Height": "Height",
+  "Impact": "Impact",
+  "Attacking Rating": "Attacking Rating",
+  "Blocking Rating": "Blocking Rating",
+  "Serving Rating": "Serving Rating",
+  "Setting Rating": "Setting Rating",
+  "Defense Rating": "Defense Rating",
+  "Receiving Rating": "Receiving Rating",
   "Running Sets": "Running Sets",
   "Setting Errors": "Setting Errors",
   "Still Sets": "Still Sets",
@@ -150,31 +157,31 @@ const Lookup: React.FC = () => {
   const statGroups = [
     {
       label: "Basic Info",
-      keys: ["Player Name", "Team", "Position", "Age", "Height"],
+      keys: ["Impact", "Team", "Position", "Age", "Height"],
     },
     {
       label: "Attacking",
-      keys: ["Kills", "Attacking Errors", "Attacking Attempts", "Attacks Per Match"],
+      keys: ["Attacking Rating", "Kills", "Attacking Errors", "Attacking Attempts", "Attacks Per Match"],
     },
     {
       label: "Blocking",
-      keys: ["Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"],
+      keys: ["Blocking Rating", "Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"],
     },
     {
       label: "Serving",
-      keys: ["Aces", "Service Errors", "Service Attempts", "Serves Per Match"],
+      keys: ["Serving Rating", "Aces", "Service Errors", "Service Attempts", "Serves Per Match"],
     },
     {
       label: "Setting",
-      keys: ["Running Sets", "Setting Errors", "Still Sets", "Sets Per Match"],
+      keys: ["Setting Rating", "Running Sets", "Setting Errors", "Still Sets", "Sets Per Match"],
     },
     {
       label: "Defense",
-      keys: ["Great Saves", "Defensive Errors", "Defensive Receptions", "Digs Per Match"],
+      keys: ["Defense Rating", "Great Saves", "Defensive Errors", "Defensive Receptions", "Digs Per Match"],
     },
     {
       label: "Receiving",
-      keys: ["Successful Receives", "Receiving Errors", "Service Receptions", "Receives Per Match"],
+      keys: ["Receiving Rating", "Successful Receives", "Receiving Errors", "Service Receptions", "Receives Per Match"],
     },
   ];
 
