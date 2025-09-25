@@ -20,9 +20,9 @@ positional_weights = {
     "OPPOSITE SPIKER": {
         "Attacking": 0.40,
         "Blocking": 0.30,
-        "Serving": 0.10,
+        "Serving": 0.15,
         "Setting": 0.05,
-        "Defense": 0.15,
+        "Defense": 0.10,
         "Receiving": 0.0
     },
     "MIDDLE BLOCKER": {
@@ -35,11 +35,11 @@ positional_weights = {
     },
     "SETTER": {
         "Attacking": 0.10,
-        "Blocking": 0.05,
-        "Serving": 0.10,
-        "Setting": 0.50,
+        "Blocking": 0.20,
+        "Serving": 0.15,
+        "Setting": 0.45,
         "Defense": 0.10,
-        "Receiving": 0.15
+        "Receiving": 0.0
     },
     "LIBERO": {
         "Attacking": 0.0,
