@@ -132,50 +132,6 @@ function getDisplayLabel(key: string): string {
   return key;
 }
 
-// Stat groups for dropdowns
-const statGroups: { label: string; stats: AxisKey[] }[] = [
-  {
-    label: 'Ratings',
-    stats: [
-      'Impact',
-      'Attacking Rating',
-      'Blocking Rating',
-      'Serving Rating',
-      'Setting Rating',
-      'Defense Rating',
-      'Receiving Rating',
-    ],
-  },
-  {
-    label: 'General',
-    stats: ['Age', 'Height'],
-  },
-  {
-    label: 'Attacking',
-    stats: ['Kills', 'Attacking Errors', 'Attacking Attempts', 'Attacks Per Match'],
-  },
-  {
-    label: 'Blocking',
-    stats: ['Blocks', 'Blocking Errors', 'Rebounds', 'Blocks Per Match'],
-  },
-  {
-    label: 'Serving',
-    stats: ['Aces', 'Service Errors', 'Service Attempts', 'Serves Per Match'],
-  },
-  {
-    label: 'Setting',
-    stats: ['Running Sets', 'Setting Errors', 'Still Sets', 'Sets Per Match'],
-  },
-  {
-    label: 'Defense',
-    stats: ['Great Saves', 'Defensive Errors', 'Digs Per Match', 'Defensive Receptions'],
-  },
-  {
-    label: 'Receiving',
-    stats: ['Successful Receives', 'Receiving Errors', 'Service Receptions', 'Receives Per Match'],
-  },
-]
-
 function App() {
   const [rawData, setRawData] = useState<PlayerRecord[]>([])
   const [loading, setLoading] = useState<boolean>(true)
