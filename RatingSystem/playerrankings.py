@@ -8,6 +8,49 @@ def clamp(x, minv=0, maxv=1):
 def pctl95(series):
     return np.percentile(series.dropna(), 95) if len(series.dropna()) > 0 else 1
 
+positional_weights = {
+    "OUTSIDE HITTER": {
+        "Attacking": 0.25,
+        "Blocking": 0.15,
+        "Serving": 0.10,
+        "Setting": 0.05,
+        "Defense": 0.15,
+        "Receiving": 0.30
+    },
+    "OPPOSITE SPIKER": {
+        "Attacking": 0.40,
+        "Blocking": 0.30,
+        "Serving": 0.10,
+        "Setting": 0.05,
+        "Defense": 0.15,
+        "Receiving": 0.0
+    },
+    "MIDDLE BLOCKER": {
+        "Attacking": 0.25,
+        "Blocking": 0.45,
+        "Serving": 0.15,
+        "Setting": 0.05,
+        "Defense": 0.05,
+        "Receiving": 0.05
+    },
+    "SETTER": {
+        "Attacking": 0.10,
+        "Blocking": 0.05,
+        "Serving": 0.10,
+        "Setting": 0.50,
+        "Defense": 0.10,
+        "Receiving": 0.15
+    },
+    "LIBERO": {
+        "Attacking": 0.0,
+        "Blocking": 0.0,
+        "Serving": 0.10,
+        "Setting": 0.10,
+        "Defense": 0.40,
+        "Receiving": 0.40
+    }
+}
+
 df = pd.read_csv('merged_stats.csv')
 
 # Reference maxima (95th percentile)
@@ -97,17 +140,39 @@ for cat, func in zip(
     max_raw = df[f'{cat}_raw'].max()
     df[f'rating_{cat}'] = (100 * df[f'{cat}_raw'] / max_raw).round(2) if max_raw > 0 else 0
 
-# Print best rating in each category and the player who has it
-for cat in ['att', 'blk', 'serv', 'set', 'def', 'recv']:
-    best_idx = df[f'rating_{cat}'].idxmax()
-    best_player = df.loc[best_idx, 'Player Name']
-    best_team = df.loc[best_idx, 'Team']
-    best_rating = df.loc[best_idx, f'rating_{cat}']
-    print(f"Best {cat} rating: {best_rating} ({best_player}, {best_team})")
+# Calculate positional weighted rating for each player
+position_map = {
+    'LIBERO': 'LIBERO',
+    'OUTSIDE HITTER': 'OUTSIDE HITTER',
+    'OPPOSITE HITTER': 'OPPOSITE SPIKER',
+    'SETTER': 'SETTER',
+    'MIDDLE BLOCKER': 'MIDDLE BLOCKER'
+}
+def get_raw_positional_rating(row):
+    pos = row['Position']
+    pos_full = position_map.get(pos, pos)
+    weights = positional_weights.get(pos_full, positional_weights['OUTSIDE HITTER'])
+    rating = sum([
+        weights['Attacking'] * row['rating_att'],
+        weights['Blocking'] * row['rating_blk'],
+        weights['Serving'] * row['rating_serv'],
+        weights['Setting'] * row['rating_set'],
+        weights['Defense'] * row['rating_def'],
+        weights['Receiving'] * row['rating_recv']
+    ])
+    return rating
 
-# Output with sub-scores for transparency
+df['raw_positional_rating'] = df.apply(get_raw_positional_rating, axis=1)
+
+# Normalize positional rating by position group
+for pos_name in positional_weights.keys():
+    mask = df['Position'].str.strip().str.upper().map(position_map.get).fillna(df['Position'].str.strip().str.upper()) == pos_name
+    max_rating = df.loc[mask, 'raw_positional_rating'].max()
+    df.loc[mask, 'positional_rating'] = (100 * df.loc[mask, 'raw_positional_rating'] / max_rating).round(2) if max_rating > 0 else 0
+
+# Output with positional rating as first value after player, team, position
 out_cols = [
-    'Player Name', 'Team',
+    'Player Name', 'Team', 'Position', 'positional_rating',
     'rating_att', 'att_eff', 'att_vol', 'att_raw',
     'rating_blk', 'blk_eff', 'blk_vol', 'blk_raw',
     'rating_serv', 'serv_eff', 'serv_vol', 'serv_raw',
@@ -115,6 +180,11 @@ out_cols = [
     'rating_def', 'def_eff', 'def_vol', 'def_raw',
     'rating_recv', 'recv_eff', 'recv_vol', 'recv_raw'
 ]
+# Round all decimals to the hundredths for output columns
+for col in out_cols:
+    if df[col].dtype in [float, np.float64, np.float32]:
+        df[col] = df[col].round(2)
+
 os.makedirs('RatingSystem', exist_ok=True)
 df[out_cols].to_csv('RatingSystem/player_rankings.csv', index=False)
-print("Player rankings saved to RatingSystem/player_rankings.csv with component sub-scores.")
+print("Player rankings saved to RatingSystem/player_rankings.csv with normalized positional ratings.")
