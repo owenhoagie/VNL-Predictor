@@ -5,7 +5,7 @@ rankings = pd.read_csv('RatingSystem/player_rankings.csv')
 merged = pd.read_csv('merged_stats.csv')
 
 # Select only relevant columns from rankings and rename for output
-selected_cols = ['Player Name', 'positional_rating',
+selected_cols = ['Player Name', 'Team', 'Position', 'positional_rating',
                  'rating_att', 'rating_blk', 'rating_serv', 'rating_set', 'rating_def', 'rating_recv']
 rankings_selected = rankings[selected_cols].copy()
 rankings_selected.rename(columns={
@@ -18,8 +18,8 @@ rankings_selected.rename(columns={
     'rating_recv': 'Receiving Rating'
 }, inplace=True)
 
-# Merge on Player Name
-merged_out = pd.merge(merged, rankings_selected, on='Player Name', how='left')
+# Merge on Player Name, Team, and Position to avoid mixing stats for identical names
+merged_out = pd.merge(merged, rankings_selected, on=['Player Name', 'Team', 'Position'], how='left')
 
 # Desired column order
 base_cols = ['Player Name', 'Team', 'Position', 'Age', 'Height']
