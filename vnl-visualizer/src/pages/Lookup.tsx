@@ -203,17 +203,17 @@ const Lookup: React.FC = () => {
         />
         {search && filteredPlayers.length > 0 && !selected && (
           <ul className="lookup-search-dropdown">
-            {filteredPlayers.map((p) => (
+            {filteredPlayers.map((p, idx) => (
               <li
-                key={p["Player Name"] as string}
-                className={`lookup-search-dropdown-item${selected && selected["Player Name"] === p["Player Name"] ? " selected" : ""}`}
+                key={p["Player Name"] + '-' + p["Team"] + '-' + p["Position"] + '-' + idx}
+                className={`lookup-search-dropdown-item${selected && selected["Player Name"] === p["Player Name"] && selected["Team"] === p["Team"] && selected["Position"] === p["Position"] ? " selected" : ""}`}
                 onClick={() => {
                   setSelected(p);
                   setGroupIdx(0);
                   setSearch(p["Player Name"] as string);
                 }}
               >
-                {p["Player Name"]}
+                {p["Player Name"]} - {COUNTRY_NAMES[p["Team"]] || p["Team"]}
               </li>
             ))}
           </ul>
