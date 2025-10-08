@@ -16,9 +16,27 @@ START_WEEK_LABEL = "1 AUGUST"
 END_WEEK_LABEL = "30 MAY"
 
 chrome_options = Options()
+# Commenting out headless mode for debugging
 # chrome_options.add_argument("--headless")
+
+# Add debugging output to ensure the browser opens
+print("Initializing ChromeDriver...")
 service = ChromeService()
 driver = webdriver.Chrome(service=service, options=chrome_options)
+print("ChromeDriver initialized successfully.")
+
+# Mapping table for converting table row names to human-readable names
+STAT_NAME_MAPPING = {
+    "attack": "Kills",
+    "block": "Blocks",
+    "serve": "Aces",
+    "opponent-error": "Opponents Errors",
+    "total": "Total Points",
+    "dig": "Digs",
+    "reception": "Receptions",
+    "set": "Sets"
+    # Add more mappings here as needed
+}
 
 def get_week_label(driver):
     # Returns the current week label (e.g., "2 AUGUST")
@@ -185,7 +203,39 @@ def scrape_match_sets(driver, match_url):
         except Exception:
             set_data.extend(["", ""])
 
-    return [home, away, winner, loser] + set_data
+    team_stats = scrape_team_stats(driver)
+
+    return [home, away, winner, loser] + set_data + team_stats
+
+def scrape_stat(driver, stat_key):
+    try:
+        # Wait for the stat row to load
+        stat_row = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, f"tr.vbw-o-table__row.{stat_key}"))
+        )
+        # print(f"{stat_key.capitalize()} row found.")
+
+        team_a_stat = stat_row.find_element(
+            By.CSS_SELECTOR, "td.vbw-o-table__cell.-td-teamA span"
+        )
+        team_b_stat = stat_row.find_element(
+            By.CSS_SELECTOR, "td.vbw-o-table__cell.-td-teamB span"
+        )
+
+        team_a_stat = team_a_stat.text.strip()
+        team_b_stat = team_b_stat.text.strip()
+
+        # print(f"Team A {stat_key.capitalize()}: {team_a_stat}, Team B {stat_key.capitalize()}: {team_b_stat}")
+        return [team_a_stat, team_b_stat]
+    except Exception as e:
+        print(f"Error grabbing {stat_key} stat: {e}")
+        return [None, None]
+
+def scrape_team_stats(driver):
+    team_stats = []
+    for stat_key in STAT_NAME_MAPPING.keys():
+        team_stats.extend(scrape_stat(driver, stat_key))
+    return team_stats
 
 def main():
     all_rows = []
@@ -212,7 +262,7 @@ def main():
             week_label = get_week_label(driver)
             print(f"Switched to week: {week_label}")
         # For each match, scrape set data
-        for idx, match in enumerate(match_links):
+        for idx, match in enumerate(match_links):  # Process all games
             # Convert date to number format (YYYY-MM-DD)
             date_str = match["date"]
             try:
@@ -221,18 +271,18 @@ def main():
                 date = date_obj.strftime("%Y-%m-%d")
             except Exception:
                 date = date_str
-            match_url = match["match_url"]
-            match_data = scrape_match_sets(driver, match_url)
+            match_data = scrape_match_sets(driver, match["match_url"])
             home, away, winner, loser = match_data[0], match_data[1], match_data[2], match_data[3]
-            set_scores = match_data[4:]
-            # Interleave set scores as set1_home, set1_away, set2_home, set2_away, ...
+            set_scores = match_data[4:14]
+            team_stats = match_data[14:]
+            # Interleave set scores as Set1 Home, Set1 Away, Set2 Home, Set2 Away, ...
             interleaved = []
             for i in range(0, 10, 2):
                 interleaved.append(set_scores[i])
                 interleaved.append(set_scores[i+1])
-            row = [date, match_url, home, away, winner, loser] + interleaved
+            row = [date, home, away, winner, loser] + team_stats + interleaved
             all_rows.append(row)
-            print(f"Scraped sets for match {idx+1}/{len(match_links)}: {match_url}")
+            print(f"Scraped sets for match {idx+1}/{len(match_links)}: {match['match_url']}")
         # Save to CSV
         dataset_dir = "ML"
         if not os.path.exists(dataset_dir):
@@ -240,7 +290,16 @@ def main():
         out_path = os.path.join(dataset_dir, "match_set_stats.csv")
         with open(out_path, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
-            header = ["date", "match_url", "home_team", "away_team", "winner", "loser"] + [f"set{i}_home" for i in range(1,6)] + [f"set{i}_away" for i in range(1,6)]
+            # Dynamically generate headers based on the mapping table
+            stat_headers = []
+            for stat_key, stat_name in STAT_NAME_MAPPING.items():
+                stat_headers.extend([f"{stat_name} Home", f"{stat_name} Away"])
+
+            header = [
+                "Date", "Home Team", "Away Team", "Winner", "Loser"
+            ] + stat_headers + [
+                f"Set{i} {team}" for i in range(1, 6) for team in ("Home", "Away")
+            ]
             writer.writerow(header)
             writer.writerows(all_rows)
         print(f"Match set stats saved to {out_path}")
