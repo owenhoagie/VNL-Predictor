@@ -13,14 +13,14 @@ VNL Predictor is a modern, interactive web application for exploring and visuali
 - **Automated Data Collection:** All player statistics are gathered using custom Python webscraping scripts, ensuring up-to-date and accurate data from official sources.
 
 ## Webscraping Approach
-A major technical challenge was collecting player statistics from websites where the data is embedded in JavaScript-rendered content. To solve this, I built custom Python scripts using **Selenium** and **ChromeDriver**. This allowed the scraper to fully render pages in a real browser, interact with dynamic elements, and extract the required information reliably—something that traditional requests-based scraping could not achieve. The result is a robust, automated pipeline for keeping the dataset fresh and complete.
+A major technical challenge was collecting player statistics from websites where the data is embedded in JavaScript-rendered content. To solve this, I built custom Python scripts using **Selenium**. This allowed the scraper to fully render pages in a real browser, interact with dynamic elements, and extract the required information reliably—something that traditional requests-based scraping could not achieve. The result is a robust, automated pipeline for keeping the dataset fresh and complete.
 
 ## Technologies Used
 - React & TypeScript
 - Vite
 - Chart.js
 - PapaParse (CSV parsing)
-- Python (Selenium, ChromeDriver webscraping)
+- Python (Selenium webscraping)
 - CSS Modules
 
 ## Why This Project?
@@ -51,7 +51,7 @@ This project demonstrates:
 Check out the live site: [https://vnl-predictor.vercel.app](https://vnl-predictor.vercel.app)
 
 ## About Me
-I'm passionate about building interactive, data-driven web applications that delight users and solve real problems. I also enjoy designing robust webscraping solutions—using tools like Selenium and ChromeDriver—to automate data collection and keep applications fresh and relevant. If you're looking for an intern who can deliver polished, impactful software, let's connect!
+I'm passionate about building interactive, data-driven web applications that delight users and solve real problems. I also enjoy designing robust webscraping solutions—using tools like Selenium—to automate data collection and keep applications fresh and relevant. If you're looking for an intern who can deliver polished, impactful software, let's connect!
 
 ---
 

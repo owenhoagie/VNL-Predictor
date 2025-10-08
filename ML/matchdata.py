@@ -20,10 +20,10 @@ chrome_options = Options()
 # chrome_options.add_argument("--headless")
 
 # Add debugging output to ensure the browser opens
-print("Initializing ChromeDriver...")
+print("Initializing Selenium...")
 service = ChromeService()
 driver = webdriver.Chrome(service=service, options=chrome_options)
-print("ChromeDriver initialized successfully.")
+print("Selenium initialized successfully.")
 
 # Mapping table for converting table row names to human-readable names
 STAT_NAME_MAPPING = {
