@@ -1,4 +1,3 @@
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
@@ -57,8 +56,8 @@ try:
         if row_data:
             print(f"{row_data[0]} ({idx+1}/{len(rows)})")
 
-    # Save to CSV in Dataset directory
-    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../team_stats.csv")
+    # Save to CSV in ML directory
+    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "team_stats.csv")
     out_path = os.path.abspath(out_path)
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
