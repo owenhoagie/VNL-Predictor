@@ -56,7 +56,10 @@ try:
         if row_data:
             print(f"{row_data[0]} ({idx+1}/{len(rows)})")
 
-    # Save to CSV in ML directory
+    # Save to CSV in ML directory with corrected headers
+    headers = [
+        "Rank", "Team", "Total", "Won", "Lost", "3-0", "3-1", "3-2", "2-3", "1-3", "0-3", "Points", "Sets Won", "Sets Lost", "Set Ratio", "Points Won", "Points Lost", "Point Ratio"
+    ]
     out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "team_stats.csv")
     out_path = os.path.abspath(out_path)
     with open(out_path, "w", newline="", encoding="utf-8") as f:
