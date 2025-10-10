@@ -14,6 +14,8 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 import os
 import joblib
 
+from collections import Counter
+
 # --- Config ---
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 PLAYER_FILE = os.path.join(DATA_DIR, "merged_stats.csv")
@@ -83,10 +85,31 @@ def build_match_features(match_row):
         feats[f"diff_{k}"] = feats[f"A_{k}"] - feats[f"B_{k}"]
     return feats
 
-# --- 5. Build Full Feature Matrix ---
+
+# --- 5. Build Full Feature Matrix and Set Score Labels ---
+def extract_set_score(row):
+    # Count sets won by Home and Away
+    home_sets = 0
+    away_sets = 0
+    for i in range(1, 6):
+        h = row.get(f'Set{i} Home')
+        a = row.get(f'Set{i} Away')
+        if pd.isna(h) or pd.isna(a):
+            continue
+        if h > a:
+            home_sets += 1
+        elif a > h:
+            away_sets += 1
+    # Format as '3-0', '3-1', etc. for winner
+    if home_sets > away_sets:
+        return f"{home_sets}-{away_sets}"
+    else:
+        return f"{away_sets}-{home_sets}"
+
 feature_rows = []
 labels = []
 groups = []
+set_score_labels = []
 for idx, row in match_df.iterrows():
     feats = build_match_features(row)
     feature_rows.append(feats)
@@ -94,9 +117,12 @@ for idx, row in match_df.iterrows():
     labels.append(1 if row['Winner'] == row['Home Team'] else 0)
     # Group by Home Team for GroupKFold
     groups.append(row['Home Team'])
+    # Set score label (winner's perspective)
+    set_score_labels.append(extract_set_score(row))
 X = pd.DataFrame(feature_rows)
 y = np.array(labels)
 groups = np.array(groups)
+set_score_labels = np.array(set_score_labels)
 
 # --- 6. Preprocessing: Fill missing values ---
 X = X.apply(pd.to_numeric, errors='coerce')
@@ -122,11 +148,35 @@ feat_importance = pd.Series(coefs, index=X.columns).sort_values(key=np.abs, asce
 print("\nTop 15 Most Important Features (by abs(coef)):")
 print(feat_importance.head(15))
 
+
 # --- Save the trained model and columns ---
 clf_full = LogisticRegression(max_iter=1000, solver='liblinear')
 clf_full.fit(X, y)
 joblib.dump({'model': clf_full, 'columns': X.columns.tolist()}, MODEL_PATH)
 print(f"\nTrained model saved to {MODEL_PATH}")
+
+# --- Train set score prediction model (multinomial logistic regression, balanced, with win prob and feature diff) ---
+SET_SCORE_MODEL_PATH = os.path.join(DATA_DIR, "set_score_model.pkl")
+from sklearn.linear_model import LogisticRegression as MultinomLogReg
+from sklearn.utils.class_weight import compute_class_weight
+# Add actual winner as a one-hot feature for set score model
+set_score_X = X.copy()
+winners = [row['Winner'] for _, row in match_df.iterrows()]
+set_score_X = pd.concat([set_score_X, pd.get_dummies(winners, prefix='winner')], axis=1)
+# Add win probability and feature diff as features
+clf_full_for_prob = LogisticRegression(max_iter=1000, solver='liblinear')
+clf_full_for_prob.fit(X, y)
+win_probs = clf_full_for_prob.predict_proba(X)[:,1]
+set_score_X['win_prob'] = win_probs
+set_score_X['feature_diff'] = X.abs().sum(axis=1)
+# Balance classes
+classes = np.unique(set_score_labels)
+class_weights = compute_class_weight('balanced', classes=classes, y=set_score_labels)
+class_weight_dict = {c: w for c, w in zip(classes, class_weights)}
+set_score_clf = MultinomLogReg(multi_class='multinomial', solver='lbfgs', max_iter=1000, class_weight=class_weight_dict)
+set_score_clf.fit(set_score_X, set_score_labels)
+joblib.dump({'model': set_score_clf, 'columns': set_score_X.columns.tolist(), 'set_score_classes': classes.tolist()}, SET_SCORE_MODEL_PATH)
+print(f"Set score model saved to {SET_SCORE_MODEL_PATH}")
 
 # --- 9. Optional: Random Forest/GBM comparison ---
 # Uncomment to compare
@@ -156,7 +206,7 @@ def build_matchup_features(teamA, teamB):
 
 def predict_match(teamA, teamB):
     feats = build_matchup_features(teamA, teamB)
-    # Load model and columns
+    # Load winner model and columns
     MODEL_PATH = os.path.join(DATA_DIR, "logistic_regression_model.pkl")
     if not os.path.exists(MODEL_PATH):
         print("Model file not found. Please train the model first.")
@@ -175,6 +225,28 @@ def predict_match(teamA, teamB):
         winner, loser, conf = teamB, teamA, probB
     print(f"\nPrediction: {winner} wins")
     print(f"Confidence (probability {winner} wins): {conf:.2f}")
+
+    # Set score prediction (conditioned on predicted winner)
+    SET_SCORE_MODEL_PATH = os.path.join(DATA_DIR, "set_score_model.pkl")
+    if os.path.exists(SET_SCORE_MODEL_PATH):
+        set_score_data = joblib.load(SET_SCORE_MODEL_PATH)
+        set_score_clf = set_score_data['model']
+        set_score_columns = set_score_data['columns']
+        X_pred_set = X_pred.reindex(columns=set_score_columns, fill_value=0)
+        # Add predicted winner as one-hot features
+        for col in set_score_columns:
+            if col.startswith('winner_'):
+                X_pred_set[col] = 1 if col == f'winner_{winner}' else 0
+        # Add win probability and feature diff
+        X_pred_set['win_prob'] = conf
+        X_pred_set['feature_diff'] = X_pred.abs().sum(axis=1).values[0]
+        set_score_proba = set_score_clf.predict_proba(X_pred_set)[0]
+        set_score_classes = set_score_data['set_score_classes'] if 'set_score_classes' in set_score_data else set_score_clf.classes_
+        # Show only the highest probability set score
+        top_idx = set_score_proba.argmax()
+        print(f"Predicted set score: {winner} wins {set_score_classes[top_idx]} (probability {set_score_proba[top_idx]:.2f})")
+    else:
+        print("Set score model not found. Please retrain to enable set score prediction.")
 def analyze_match_stat_importance():
     """
     Analyze which per-match stats are most predictive of winning using only match_set_stats.csv.
