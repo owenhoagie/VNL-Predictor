@@ -1,6 +1,5 @@
 
 # Volleyball Match Outcome Predictor Pipeline
-# Author: Volleyball Data Science Expert
 #
 # Loads player, team, and match stats, aggregates features, merges, and trains a binary classifier.
 # Modular, interpretable, and ready for updates.
