@@ -125,7 +125,6 @@ const Lookup: React.FC = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<PlayerRecord | null>(null);
   const [groupIdx, setGroupIdx] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -138,11 +137,9 @@ const Lookup: React.FC = () => {
         const parsed = Papa.parse(csvText, { header: true, dynamicTyping: false, skipEmptyLines: true });
         const rows = (parsed.data as any[]).filter((r) => r && r["Player Name"]);
         setPlayers(rows);
-        setLoading(false);
       })
       .catch((e) => {
         setError(e.message || "Failed to load data");
-        setLoading(false);
       });
   }, []);
 
@@ -220,7 +217,6 @@ const Lookup: React.FC = () => {
           </ul>
         )}
       </div>
-      {loading && <div className="lookup-loading">Loading players…</div>}
       {error && <div className="lookup-error">{error}</div>}
       {/* Animated player details popup */}
       <AnimatedStatsPopup
