@@ -7,7 +7,6 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GroupKFold, cross_val_score, cross_validate
 from sklearn.metrics import accuracy_score, roc_auc_score
 import os
