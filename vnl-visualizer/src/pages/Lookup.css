@@ -1,3 +1,101 @@
+/* --- RESTORED LOOKUP SEARCHBAR WIDTH TO ORIGINAL --- */
+.lookup-searchbar-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 24px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.lookup-searchbar {
+  width: 100%;
+  max-width: 420px;
+  min-width: 0;
+  padding: 18px 22px;
+  font-size: 1.3rem;
+  border-radius: 12px;
+  border: 2px solid #4f8cff;
+  background: #10182c;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(30,40,80,0.18);
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  text-align: center;
+  box-sizing: border-box;
+}
+.lookup-search-dropdown {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  width: 100% !important;
+  max-width: 420px !important;
+  min-width: 0 !important;
+  background: linear-gradient(135deg, #223366 0%, #10182c 100%);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 24px rgba(30,40,80,0.18);
+  border: 1px solid #223366;
+  z-index: 10;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  transform: none;
+  box-sizing: border-box;
+}
+/* Prediction page custom row alignment */
+.prediction-search-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.prediction-search-row > div {
+  width: 200px !important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.prediction-search-row > div:last-of-type {
+  align-items: flex-start;
+}
+.prediction-search-row input.lookup-searchbar {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.prediction-search-row > div:last-of-type {
+  align-items: flex-start;
+}
+.prediction-search-row > div:last-of-type {
+  align-items: flex-start;
+}
+.prediction-search-row input.lookup-searchbar {
+  width: 100%;
+  text-align: left;
+}
+.prediction-vs-text {
+  color: #4f8cff;
+  font-weight: 600;
+  font-size: 22px;
+  margin: 0 18px;
+  min-width: 32px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
 .lookup-player-details.small {
   /* ...existing styles... */
   animation: fadeInStats 0.5s cubic-bezier(.4,0,.2,1);
@@ -45,10 +143,8 @@
 .lookup-search-dropdown {
   position: absolute;
   top: 54px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 420px;
+  left: 0;
+  width: 100% !important;
   background: linear-gradient(135deg, #223366 0%, #10182c 100%);
   border-radius: 0 0 12px 12px;
   box-shadow: 0 4px 24px rgba(30,40,80,0.18);
@@ -58,6 +154,8 @@
   overflow-y: auto;
   padding: 0;
   margin: 0;
+  transform: none;
+  box-sizing: border-box;
 }
 .lookup-search-dropdown-item {
   padding: 14px 22px;
@@ -166,6 +264,7 @@
   box-shadow: 0 2px 12px rgba(30,40,80,0.18);
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
+  text-align: center;
 }
 .lookup-searchbar:focus {
   border-color: #4f46e5;
@@ -200,6 +299,7 @@
   border-bottom: none;
   transition: background 0.18s, color 0.18s;
   white-space: nowrap;
+  text-align: center;
 }
 .lookup-list-item:last-child {
   border-right: none;

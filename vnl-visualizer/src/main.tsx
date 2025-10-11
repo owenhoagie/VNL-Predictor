@@ -7,6 +7,8 @@ import Visualization from './pages/Visualization';
 import Lookup from './pages/Lookup';
 import NavBar from './components/NavBar';
 
+import Prediction from './pages/Prediction';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
@@ -15,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<Home />} />
         <Route path="/visualize" element={<Visualization />} />
   <Route path="/lookup" element={<Lookup />} />
+  <Route path="/predict" element={<Prediction />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

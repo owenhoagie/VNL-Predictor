@@ -17,7 +17,8 @@ export default function NavBar() {
         <div className={`navbar-links${menuOpen ? ' open' : ''}`}>
           <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/visualize" className={location.pathname === '/visualize' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Visualization</Link>
-            <Link to="/lookup" className={location.pathname === '/lookup' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Lookup</Link>
+          <Link to="/lookup" className={location.pathname === '/lookup' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Lookup</Link>
+          <Link to="/predict" className={location.pathname === '/predict' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Prediction</Link>
         </div>
       </div>
     </nav>

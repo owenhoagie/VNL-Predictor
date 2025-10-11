@@ -189,7 +189,7 @@ const Lookup: React.FC = () => {
     <div className="lookup-container">
       <h1>Player Lookup</h1>
       <p>Type a player's name to view their full stats.</p>
-      <div className="lookup-searchbar-wrap">
+      <div className="lookup-searchbar-wrap" style={{ width: '100%', maxWidth: 420, position: 'relative', margin: '0 auto' }}>
         <input
           className="lookup-searchbar"
           type="text"
@@ -200,9 +200,10 @@ const Lookup: React.FC = () => {
             setSelected(null);
           }}
           autoComplete="off"
+          style={{ width: '100%' }}
         />
         {search && filteredPlayers.length > 0 && !selected && (
-          <ul className="lookup-search-dropdown">
+          <ul className="lookup-search-dropdown" style={{ width: '100%' }}>
             {filteredPlayers.map((p, idx) => (
               <li
                 key={p["Player Name"] + '-' + p["Team"] + '-' + p["Position"] + '-' + idx}
