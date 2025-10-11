@@ -1,5 +1,8 @@
 
+
 # VNL Predictor: Developer Documentation
+
+**Live Demo:** [https://vnl-predictor.vercel.app](https://vnl-predictor.vercel.app)
 
 **A full-stack, automated pipeline for scraping, processing, modeling, and visualizing Volleyball Nations League (VNL) player and match data.**
 
@@ -202,7 +205,7 @@ npm run dev
 
 ## Development Notes
 
-- All scrapers use Selenium and require ChromeDriver installed and in PATH
+- All scrapers use Selenium and require WebDriver installed and in PATH
 - Data pipeline is modular: you can re-run any step independently
 - All CSVs are UTF-8 encoded
 - ML pipeline is fully reproducible; retrain with new data as needed
