@@ -36,10 +36,17 @@ const Prediction: React.FC = () => {
     setLoading(true);
     setError('');
     setResult(null);
+    // Convert abbreviations to full names if needed
+    const teamAFull = COUNTRY_NAMES[team1] || team1;
+    const teamBFull = COUNTRY_NAMES[team2] || team2;
+    const requestBody = { teamA: teamAFull, teamB: teamBFull };
+    console.log('Sending prediction request:', requestBody);
     try {
-      const response = await fetch(
-        `/api/predict?team1=${encodeURIComponent(team1)}&team2=${encodeURIComponent(team2)}`
-      );
+      const response = await fetch('/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
       if (!response.ok) throw new Error('Prediction failed');
       const data = await response.json();
       setResult(data);
@@ -147,7 +154,7 @@ const Prediction: React.FC = () => {
           <h2>Prediction Result</h2>
           <div className="lookup-player-stats-groups single">
             <div className="lookup-stat-group">
-              <div className="lookup-stat-group-label">Winner</div>
+              <div className="lookup-stat-group-label">Info</div>
               <div className="lookup-stat-group-rows">
                 <div className="lookup-stat-row">
                   <span className="lookup-stat-label">Winner</span>
@@ -157,17 +164,12 @@ const Prediction: React.FC = () => {
                   <span className="lookup-stat-label">Confidence</span>
                   <span className="lookup-stat-value">{(result.winner_confidence * 100).toFixed(1)}%</span>
                 </div>
-              </div>
-            </div>
-            <div className="lookup-stat-group">
-              <div className="lookup-stat-group-label">Set Score</div>
-              <div className="lookup-stat-group-rows">
                 <div className="lookup-stat-row">
-                  <span className="lookup-stat-label">Set Score</span>
+                  <span className="lookup-stat-label">Score</span>
                   <span className="lookup-stat-value">{result.set_score}</span>
                 </div>
                 <div className="lookup-stat-row">
-                  <span className="lookup-stat-label">Confidence</span>
+                  <span className="lookup-stat-label">Set Confidence</span>
                   <span className="lookup-stat-value">{(result.set_score_confidence * 100).toFixed(1)}%</span>
                 </div>
               </div>
