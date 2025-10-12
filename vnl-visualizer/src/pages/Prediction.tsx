@@ -25,9 +25,11 @@ const Prediction: React.FC = () => {
   }, []);
   const [result, setResult] = useState<null | {
     winner: string;
-    winner_confidence: number;
-    set_score: string;
-    set_score_confidence: number;
+    confidence: number;
+    set_score: {
+      score: string;
+      probability: number;
+    };
   }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,9 +39,9 @@ const Prediction: React.FC = () => {
     setError('');
     setResult(null);
     // Convert abbreviations to full names if needed
-    const teamAFull = COUNTRY_NAMES[team1] || team1;
-    const teamBFull = COUNTRY_NAMES[team2] || team2;
-    const requestBody = { teamA: teamAFull, teamB: teamBFull };
+    const team1Full = COUNTRY_NAMES[team1] || team1;
+    const team2Full = COUNTRY_NAMES[team2] || team2;
+    const requestBody = { team1: team1Full, team2: team2Full };
     console.log('Sending prediction request:', requestBody);
     try {
       const response = await fetch('/api/predict', {
@@ -162,15 +164,15 @@ const Prediction: React.FC = () => {
                 </div>
                 <div className="lookup-stat-row">
                   <span className="lookup-stat-label">Confidence</span>
-                  <span className="lookup-stat-value">{(result.winner_confidence * 100).toFixed(1)}%</span>
+                  <span className="lookup-stat-value">{(result.confidence * 100).toFixed(1)}%</span>
                 </div>
                 <div className="lookup-stat-row">
                   <span className="lookup-stat-label">Score</span>
-                  <span className="lookup-stat-value">{result.set_score}</span>
+                  <span className="lookup-stat-value">{result.set_score.score}</span>
                 </div>
                 <div className="lookup-stat-row">
-                  <span className="lookup-stat-label">Set Confidence</span>
-                  <span className="lookup-stat-value">{(result.set_score_confidence * 100).toFixed(1)}%</span>
+                  <span className="lookup-stat-label">Set Probability</span>
+                  <span className="lookup-stat-value">{(result.set_score.probability * 100).toFixed(1)}%</span>
                 </div>
               </div>
             </div>
