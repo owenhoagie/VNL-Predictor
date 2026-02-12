@@ -3,6 +3,7 @@
 # VNL Predictor: Developer Documentation
 
 **Live Demo:** [https://vnl-predictor.vercel.app](https://vnl-predictor.vercel.app)
+**Kaggle Dataset:** [https://www.kaggle.com/datasets/owenhoag07/vnl-2025-mens][https://www.kaggle.com/datasets/owenhoag07/vnl-2025-mens]
 
 **A full-stack, automated pipeline for scraping, processing, modeling, and visualizing Volleyball Nations League (VNL) player and match data.**
 
@@ -92,6 +93,12 @@ Frontend (vnl-visualizer/)
    - Trains a multinomial logistic regression model to predict set scores
    - Saves trained models as `.pkl` files
    - Provides CLI for head-to-head predictions and stat importance analysis
+
+---
+
+## Data (cont.)
+### Kaggle Publishing
+The dataset used has now been officaily published on Kaggle. A simple guide (notebook) has been provided for users looking to quickly start analyzing the data on their own. The dataset can be found [here][https://www.kaggle.com/datasets/owenhoag07/vnl-2025-mens]. The notebook can be found [here][https://www.kaggle.com/code/owenhoag07/vnl-2025-quick-guide].
 
 ---
 
