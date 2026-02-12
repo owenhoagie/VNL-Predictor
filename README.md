@@ -18,6 +18,7 @@
    - [2. Data Merging](#2-data-merging)
    - [3. Player Rating System](#3-player-rating-system)
    - [4. Machine Learning Pipeline](#4-machine-learning-pipeline)
+- [Data (cont.)](#data-cont)
 - [Frontend (vnl-visualizer)](#frontend-vnl-visualizer)
 - [File/Folder Structure](#filefolder-structure)
 - [Setup & Usage](#setup--usage)
@@ -99,7 +100,9 @@ Frontend (vnl-visualizer/)
 
 ## Data (cont.)
 ### Kaggle Publishing
-The dataset used has now been officaily published on Kaggle. A simple guide (notebook) has been provided for users looking to quickly start analyzing the data on their own. The dataset can be found [here](https://www.kaggle.com/datasets/owenhoag07/vnl-2025-mens). The notebook can be found [here](https://www.kaggle.com/code/owenhoag07/vnl-2025-quick-guide).
+The dataset used has now been officaily published on Kaggle. A simple guide (notebook) has been provided for users looking to quickly start analyzing the data on their own. 
+   - The dataset can be found [here](https://www.kaggle.com/datasets/owenhoag07/vnl-2025-mens).
+   - The notebook can be found [here](https://www.kaggle.com/code/owenhoag07/vnl-2025-quick-guide).
 
 ---
 
