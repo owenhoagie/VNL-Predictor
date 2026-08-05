@@ -222,9 +222,9 @@ npm run dev
 # Visit http://localhost:5173
 ```
 
-The Vite development server proxies `/api` to `http://127.0.0.1:5000`.
+The Vite development server proxies `/api` to `http://127.0.0.1:5050`.
 Run `python scripts/serve_api.py` from the repository root in a second terminal
-to enable local predictions.
+to enable local predictions. Set `VNL_API_PORT` to override the API port.
 Production uses the Vercel Python function in `vnl-visualizer/api/predict.py`.
 The linked Vercel project uses `vnl-visualizer/` as its project root.
 

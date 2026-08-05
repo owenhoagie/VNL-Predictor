@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from http.server import HTTPServer
 from pathlib import Path
@@ -13,8 +14,14 @@ from predict import handler
 
 
 def main() -> None:
-    server = HTTPServer(("127.0.0.1", 5000), handler)
-    print("Prediction API running at http://127.0.0.1:5000")
+    host = os.environ.get("VNL_API_HOST", "127.0.0.1")
+    try:
+        port = int(os.environ.get("VNL_API_PORT", "5050"))
+    except ValueError as error:
+        raise SystemExit("VNL_API_PORT must be a valid integer.") from error
+
+    server = HTTPServer((host, port), handler)
+    print(f"Prediction API running at http://{host}:{port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

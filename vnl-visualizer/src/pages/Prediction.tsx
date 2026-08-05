@@ -56,13 +56,26 @@ export default function Prediction() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(
+          `Prediction service returned an invalid response (${response.status}).`
+        );
+      }
+
       const data = await response.json() as PredictionResult & ErrorResponse;
       if (!response.ok || data.error) {
         throw new Error(data.error || 'Prediction failed');
       }
       setResult(data);
     } catch (reason: unknown) {
-      setError(reason instanceof Error ? reason.message : 'Unknown error');
+      const message = reason instanceof Error ? reason.message : 'Unknown error';
+      setError(
+        message === 'Failed to fetch'
+          ? 'Unable to reach the prediction service.'
+          : message
+      );
     } finally {
       setLoading(false);
     }
