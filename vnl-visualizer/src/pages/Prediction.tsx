@@ -1,38 +1,46 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
-import Papa from 'papaparse';
+import { useEffect, useMemo, useState } from 'react';
 import './Lookup.css';
+import { COUNTRY_NAMES, loadPlayers } from '../data/playerData';
 
-const COUNTRY_NAMES: Record<string, string> = {
-  ARG: 'Argentina', BRA: 'Brazil', BUL: 'Bulgaria', CAN: 'Canada', CHN: 'China', CUB: 'Cuba', FRA: 'France', GER: 'Germany', IRI: 'Iran', ITA: 'Italy', JPN: 'Japan', NED: 'Netherlands', POL: 'Poland', SLO: 'Slovenia', SRB: 'Serbia', TUR: 'Turkey', UKR: 'Ukraine', USA: 'USA',
+type PredictionResult = {
+  winner: string;
+  confidence: number;
+  set_score?: {
+    score: string;
+    probability: number;
+  };
 };
 
-const Prediction: React.FC = () => {
+type ErrorResponse = {
+  error?: string;
+};
+
+export default function Prediction() {
   const [teams, setTeams] = useState<string[]>([]);
   const [team1, setTeam1] = useState('');
   const [team2, setTeam2] = useState('');
   const [team1Search, setTeam1Search] = useState('');
   const [team2Search, setTeam2Search] = useState('');
-  useEffect(() => {
-    fetch('/merged_stats.csv')
-      .then((r) => r.text())
-      .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: false, skipEmptyLines: true });
-        const rows = (parsed.data as any[]).filter((r) => r && r['Team']);
-        const uniqueTeams = Array.from(new Set(rows.map((r) => r['Team']))).sort();
-        setTeams(uniqueTeams);
-      });
-  }, []);
-  const [result, setResult] = useState<null | {
-    winner: string;
-    confidence: number;
-    set_score: {
-      score: string;
-      probability: number;
-    };
-  }>(null);
+  const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    loadPlayers()
+      .then((players) => {
+        if (!active) return;
+        setTeams(Array.from(new Set(players.map(({ Team }) => Team))).sort());
+      })
+      .catch((reason: unknown) => {
+        if (!active) return;
+        setError(reason instanceof Error ? reason.message : 'Failed to load teams');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handlePredict = async () => {
     setLoading(true);
@@ -42,18 +50,19 @@ const Prediction: React.FC = () => {
     const team1Full = COUNTRY_NAMES[team1] || team1;
     const team2Full = COUNTRY_NAMES[team2] || team2;
     const requestBody = { team1: team1Full, team2: team2Full };
-    console.log('Sending prediction request:', requestBody);
     try {
       const response = await fetch('/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
-      if (!response.ok) throw new Error('Prediction failed');
-      const data = await response.json();
+      const data = await response.json() as PredictionResult & ErrorResponse;
+      if (!response.ok || data.error) {
+        throw new Error(data.error || 'Prediction failed');
+      }
       setResult(data);
-    } catch (err: any) {
-      setError(err.message || 'Unknown error');
+    } catch (reason: unknown) {
+      setError(reason instanceof Error ? reason.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -76,30 +85,42 @@ const Prediction: React.FC = () => {
   );
 
   return (
-    <div className="lookup-container">
-      <h1>Match Prediction</h1>
-      <p>Select two teams to predict the winner and set score.</p>
-  <div className="prediction-search-row" style={{ marginBottom: 32 }}>
-  <div style={{ position: 'relative', width: 140 }}>
+    <main className="lookup-container prediction-container">
+      <header className="lookup-page-header">
+        <p className="eyebrow">MATCHUP MODEL</p>
+        <h1>Put two teams<br />on the same court.</h1>
+        <p>Choose a matchup to estimate the winner, confidence, and likely set score.</p>
+      </header>
+  <div className="prediction-search-row">
+  <div className="prediction-team-field">
+    <span className="prediction-team-label">TEAM A</span>
     <input
       className="lookup-searchbar"
       type="text"
       placeholder="Team 1"
+      aria-label="Search for team 1"
       value={team1Search || (team1 ? (COUNTRY_NAMES[team1] || team1) : '')}
       onChange={e => {
         setTeam1Search(e.target.value);
         setTeam1('');
       }}
       autoComplete="off"
-      style={{ width: '100%' }}
     />
     {team1Search && filteredTeams1.length > 0 && !team1 && (
-      <ul className="lookup-search-dropdown" style={{ width: '100%' }}>
+      <ul className="lookup-search-dropdown" style={{ width: '100%' }} role="listbox">
         {filteredTeams1.map((t, idx) => (
           <li
             key={t + '-' + idx}
             className="lookup-search-dropdown-item"
+            role="option"
+            tabIndex={0}
             onClick={() => {
+              setTeam1(t);
+              setTeam1Search('');
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              event.preventDefault();
               setTeam1(t);
               setTeam1Search('');
             }}
@@ -111,26 +132,35 @@ const Prediction: React.FC = () => {
     )}
   </div>
   <span className="prediction-vs-text">vs</span>
-  <div style={{ position: 'relative', width: 140 }}>
+  <div className="prediction-team-field">
+    <span className="prediction-team-label">TEAM B</span>
     <input
       className="lookup-searchbar"
       type="text"
       placeholder="Team 2"
+      aria-label="Search for team 2"
       value={team2Search || (team2 ? (COUNTRY_NAMES[team2] || team2) : '')}
       onChange={e => {
         setTeam2Search(e.target.value);
         setTeam2('');
       }}
       autoComplete="off"
-      style={{ width: '100%' }}
     />
     {team2Search && filteredTeams2.length > 0 && !team2 && (
-      <ul className="lookup-search-dropdown" style={{ width: '100%' }}>
+      <ul className="lookup-search-dropdown" style={{ width: '100%' }} role="listbox">
         {filteredTeams2.map((t, idx) => (
           <li
             key={t + '-' + idx}
             className="lookup-search-dropdown-item"
+            role="option"
+            tabIndex={0}
             onClick={() => {
+              setTeam2(t);
+              setTeam2Search('');
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              event.preventDefault();
               setTeam2(t);
               setTeam2Search('');
             }}
@@ -143,8 +173,7 @@ const Prediction: React.FC = () => {
   </div>
       </div>
       <button
-        className="lookup-group-nav-btn"
-        style={{ margin: '0 auto 24px auto', display: 'block', minWidth: 180 }}
+        className="lookup-group-nav-btn prediction-submit"
         onClick={handlePredict}
         disabled={loading || !team1 || !team2}
       >
@@ -152,7 +181,7 @@ const Prediction: React.FC = () => {
       </button>
       {error && <div className="lookup-error">{error}</div>}
       {result && (
-        <div className="lookup-player-details small" style={{ marginTop: 32 }}>
+        <div className="lookup-player-details small prediction-result">
           <h2>Prediction Result</h2>
           <div className="lookup-player-stats-groups single">
             <div className="lookup-stat-group">
@@ -166,21 +195,23 @@ const Prediction: React.FC = () => {
                   <span className="lookup-stat-label">Confidence</span>
                   <span className="lookup-stat-value">{(result.confidence * 100).toFixed(1)}%</span>
                 </div>
-                <div className="lookup-stat-row">
-                  <span className="lookup-stat-label">Score</span>
-                  <span className="lookup-stat-value">{result.set_score.score}</span>
-                </div>
-                <div className="lookup-stat-row">
-                  <span className="lookup-stat-label">Set Probability</span>
-                  <span className="lookup-stat-value">{(result.set_score.probability * 100).toFixed(1)}%</span>
-                </div>
+                {result.set_score && (
+                  <>
+                    <div className="lookup-stat-row">
+                      <span className="lookup-stat-label">Score</span>
+                      <span className="lookup-stat-value">{result.set_score.score}</span>
+                    </div>
+                    <div className="lookup-stat-row">
+                      <span className="lookup-stat-label">Set Probability</span>
+                      <span className="lookup-stat-value">{(result.set_score.probability * 100).toFixed(1)}%</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
-};
-
-export default Prediction;
+}

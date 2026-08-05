@@ -1,26 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-
-const STAT_GROUPS = [
-  {
-    name: 'Ratings',
-    stats: [
-      'Impact',
-      'Attacking Rating',
-      'Blocking Rating',
-      'Serving Rating',
-      'Setting Rating',
-      'Defense Rating',
-      'Receiving Rating',
-    ],
-  },
-  { name: 'General', stats: ['Age', 'Height'] },
-  { name: 'Attacking', stats: ['Kills', 'Attacking Errors', 'Attacking Attempts', 'Attacks Per Match'] },
-  { name: 'Blocking', stats: ['Blocks', 'Blocking Errors', 'Rebounds', 'Blocks Per Match'] },
-  { name: 'Serving', stats: ['Aces', 'Service Errors', 'Service Attempts', 'Serves Per Match'] },
-  { name: 'Setting', stats: ['Running Sets', 'Setting Errors', 'Still Sets', 'Sets Per Match'] },
-  { name: 'Defense', stats: ['Great Saves', 'Defensive Errors', 'Digs Per Match', 'Defensive Receptions'] },
-  { name: 'Receiving', stats: ['Successful Receives', 'Receiving Errors', 'Service Receptions', 'Receives Per Match'] },
-];
+import { STAT_GROUPS } from '../data/playerData';
 
 export type StatAxisSelectProps = {
   label: string;
@@ -60,7 +39,13 @@ export default function StatAxisSelect({ label, value, onChange, placeholder, st
   return (
     <div className="ms" ref={containerRef}>
       <label className="label">{label}</label>
-      <button type="button" className="ms-control" onClick={() => setOpen(s => !s)}>
+      <button
+        type="button"
+        className="ms-control"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+      >
         <div className="ms-values">
           {!value && (
             <span className="ms-placeholder">{placeholder || 'Select...'}</span>
@@ -77,6 +62,7 @@ export default function StatAxisSelect({ label, value, onChange, placeholder, st
             <input
               className="ms-search"
               placeholder="Search..."
+              aria-label={`Search ${label.toLowerCase()} options`}
               value={query}
               onChange={e => setQuery(e.target.value)}
             />

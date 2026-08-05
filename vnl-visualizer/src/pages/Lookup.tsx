@@ -1,15 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
-import Papa from "papaparse";
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import "./Lookup.css";
-
-
-const COUNTRY_NAMES: Record<string, string> = {
-  ARG: 'Argentina', BRA: 'Brazil', BUL: 'Bulgaria', CAN: 'Canada', CHN: 'China', CUB: 'Cuba', FRA: 'France', GER: 'Germany', IRI: 'Iran', ITA: 'Italy', JPN: 'Japan', NED: 'Netherlands', POL: 'Poland', SLO: 'Slovenia', SRB: 'Serbia', TUR: 'Turkey', UKR: 'Ukraine', USA: 'USA',
-};
-
-function formatPosition(pos: string) {
-  return pos.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase());
-}
+import {
+  COUNTRY_NAMES,
+  formatPosition,
+  loadPlayers,
+  type PlayerRecord,
+} from "../data/playerData";
 
 const statLabels: Record<string, string> = {
   "Player Name": "Player Name",
@@ -50,19 +46,49 @@ const statLabels: Record<string, string> = {
   "Attacks Per Match": "Attacks Per Match",
 };
 
-type PlayerRecord = Record<string, string | number>;
-
-type StatGroup = { label: string; keys: string[] };
+type StatKey = keyof PlayerRecord;
+type StatGroup = { label: string; keys: StatKey[] };
 
 type AnimatedStatsPopupProps = {
   selected: PlayerRecord | null;
   groupIdx: number;
   statGroups: StatGroup[];
   statLabels: Record<string, string>;
-  setGroupIdx: React.Dispatch<React.SetStateAction<number>>;
+  setGroupIdx: Dispatch<SetStateAction<number>>;
 };
 
-const AnimatedStatsPopup: React.FC<AnimatedStatsPopupProps> = ({ selected, groupIdx, statGroups, statLabels, setGroupIdx }) => {
+const STAT_GROUPS: StatGroup[] = [
+  {
+    label: "Basic Info",
+    keys: ["Impact", "Team", "Position", "Age", "Height"],
+  },
+  {
+    label: "Attacking",
+    keys: ["Attacking Rating", "Kills", "Attacking Errors", "Attacking Attempts", "Attacks Per Match"],
+  },
+  {
+    label: "Blocking",
+    keys: ["Blocking Rating", "Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"],
+  },
+  {
+    label: "Serving",
+    keys: ["Serving Rating", "Aces", "Service Errors", "Service Attempts", "Serves Per Match"],
+  },
+  {
+    label: "Setting",
+    keys: ["Setting Rating", "Running Sets", "Setting Errors", "Still Sets", "Sets Per Match"],
+  },
+  {
+    label: "Defense",
+    keys: ["Defense Rating", "Great Saves", "Defensive Errors", "Defensive Receptions", "Digs Per Match"],
+  },
+  {
+    label: "Receiving",
+    keys: ["Receiving Rating", "Successful Receives", "Receiving Errors", "Service Receptions", "Receives Per Match"],
+  },
+];
+
+function AnimatedStatsPopup({ selected, groupIdx, statGroups, statLabels, setGroupIdx }: AnimatedStatsPopupProps) {
   const [visible, setVisible] = useState(!!selected);
   useEffect(() => {
     if (selected) {
@@ -87,6 +113,7 @@ const AnimatedStatsPopup: React.FC<AnimatedStatsPopupProps> = ({ selected, group
                   let value = selected[key];
                   if (key === "Team") value = COUNTRY_NAMES[String(value)] || value;
                   if (key === "Position") value = formatPosition(String(value));
+                  if (key === "Height") value = `${value}cm`;
                   return (
                     <div key={key} className="lookup-stat-row">
                       <span className="lookup-stat-label">{statLabels[key]}</span>
@@ -118,9 +145,9 @@ const AnimatedStatsPopup: React.FC<AnimatedStatsPopupProps> = ({ selected, group
       )}
     </div>
   );
-};
+}
 
-const Lookup: React.FC = () => {
+export default function Lookup() {
   const [players, setPlayers] = useState<PlayerRecord[]>([]);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<PlayerRecord | null>(null);
@@ -128,19 +155,18 @@ const Lookup: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/merged_stats.csv")
-      .then((r) => {
-        if (!r.ok) throw new Error(`Failed to load CSV: ${r.status}`);
-        return r.text();
+    let active = true;
+    loadPlayers()
+      .then((rows) => {
+        if (active) setPlayers(rows);
       })
-      .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: false, skipEmptyLines: true });
-        const rows = (parsed.data as any[]).filter((r) => r && r["Player Name"]);
-        setPlayers(rows);
-      })
-      .catch((e) => {
-        setError(e.message || "Failed to load data");
+      .catch((reason: unknown) => {
+        if (!active) return;
+        setError(reason instanceof Error ? reason.message : "Failed to load data");
       });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const filteredPlayers = useMemo(() => {
@@ -150,47 +176,19 @@ const Lookup: React.FC = () => {
     );
   }, [players, search]);
 
-  // Stat groups for organization
-  const statGroups = [
-    {
-      label: "Basic Info",
-      keys: ["Impact", "Team", "Position", "Age", "Height"],
-    },
-    {
-      label: "Attacking",
-      keys: ["Attacking Rating", "Kills", "Attacking Errors", "Attacking Attempts", "Attacks Per Match"],
-    },
-    {
-      label: "Blocking",
-      keys: ["Blocking Rating", "Blocks", "Blocking Errors", "Rebounds", "Blocks Per Match"],
-    },
-    {
-      label: "Serving",
-      keys: ["Serving Rating", "Aces", "Service Errors", "Service Attempts", "Serves Per Match"],
-    },
-    {
-      label: "Setting",
-      keys: ["Setting Rating", "Running Sets", "Setting Errors", "Still Sets", "Sets Per Match"],
-    },
-    {
-      label: "Defense",
-      keys: ["Defense Rating", "Great Saves", "Defensive Errors", "Defensive Receptions", "Digs Per Match"],
-    },
-    {
-      label: "Receiving",
-      keys: ["Receiving Rating", "Successful Receives", "Receiving Errors", "Service Receptions", "Receives Per Match"],
-    },
-  ];
-
   return (
-    <div className="lookup-container">
-      <h1>Player Lookup</h1>
-      <p>Type a player's name to view their full stats.</p>
-      <div className="lookup-searchbar-wrap" style={{ width: '100%', maxWidth: 420, position: 'relative', margin: '0 auto' }}>
+    <main className="lookup-container">
+      <header className="lookup-page-header">
+        <p className="eyebrow">ROSTER INDEX</p>
+        <h1>Find the player.<br />See the full picture.</h1>
+        <p>Search the 2025 men&apos;s VNL field and move through every skill group.</p>
+      </header>
+      <div className="lookup-searchbar-wrap">
         <input
           className="lookup-searchbar"
           type="text"
           placeholder="Search for a player..."
+          aria-label="Search for a player"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -200,15 +198,24 @@ const Lookup: React.FC = () => {
           style={{ width: '100%' }}
         />
         {search && filteredPlayers.length > 0 && !selected && (
-          <ul className="lookup-search-dropdown" style={{ width: '100%' }}>
+          <ul className="lookup-search-dropdown" style={{ width: '100%' }} role="listbox">
             {filteredPlayers.map((p, idx) => (
               <li
                 key={p["Player Name"] + '-' + p["Team"] + '-' + p["Position"] + '-' + idx}
                 className={`lookup-search-dropdown-item${selected && selected["Player Name"] === p["Player Name"] && selected["Team"] === p["Team"] && selected["Position"] === p["Position"] ? " selected" : ""}`}
+                role="option"
+                tabIndex={0}
                 onClick={() => {
                   setSelected(p);
                   setGroupIdx(0);
                   setSearch(p["Player Name"] as string);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter" && event.key !== " ") return;
+                  event.preventDefault();
+                  setSelected(p);
+                  setGroupIdx(0);
+                  setSearch(p["Player Name"]);
                 }}
               >
                 {p["Player Name"]} - {COUNTRY_NAMES[p["Team"]] || p["Team"]}
@@ -222,12 +229,10 @@ const Lookup: React.FC = () => {
       <AnimatedStatsPopup
         selected={selected}
         groupIdx={groupIdx}
-        statGroups={statGroups}
+        statGroups={STAT_GROUPS}
         statLabels={statLabels}
         setGroupIdx={setGroupIdx}
       />
-    </div>
+    </main>
   );
-};
-
-export default Lookup;
+}
