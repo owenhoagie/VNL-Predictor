@@ -32,12 +32,6 @@ export default function Home() {
             <span>DATA SNAPSHOT</span>
             <span>VNL / 25</span>
           </div>
-          <div className="court-graphic" aria-hidden="true">
-            <span className="court-line court-line-center" />
-            <span className="court-line court-line-left" />
-            <span className="court-line court-line-right" />
-            <span className="court-ball" />
-          </div>
           <dl className="data-card-stats">
             <div>
               <dt>Players indexed</dt>
