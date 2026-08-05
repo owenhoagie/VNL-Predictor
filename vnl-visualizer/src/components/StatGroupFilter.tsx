@@ -1,15 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { STAT_GROUPS } from '../data/playerData';
 
-const STAT_GROUPS = [
-  'Ratings',
-  'General',
-  'Attacking',
-  'Blocking',
-  'Serving',
-  'Setting',
-  'Defense',
-  'Receiving',
-];
+const STAT_GROUP_NAMES = STAT_GROUPS.map(({ name }) => name);
 
 export type StatGroupFilterProps = {
   selected: string[];
@@ -32,8 +24,8 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return STAT_GROUPS;
-    return STAT_GROUPS.filter((g) => g.toLowerCase().includes(q));
+    if (!q) return STAT_GROUP_NAMES;
+    return STAT_GROUP_NAMES.filter((group) => group.toLowerCase().includes(q));
   }, [query]);
 
   const toggle = (group: string) => {
@@ -49,7 +41,13 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
   return (
     <div className="ms" ref={containerRef}>
       <label className="label">Stat Groups</label>
-      <button type="button" className="ms-control" onClick={() => setOpen((s) => !s)}>
+      <button
+        type="button"
+        className="ms-control"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+      >
         <div className="ms-values">
           {selected.length === 0 && (
             <span className="ms-placeholder">All Groups</span>
@@ -71,6 +69,7 @@ export default function StatGroupFilter({ selected, onChange }: StatGroupFilterP
             <input
               className="ms-search"
               placeholder="Search..."
+              aria-label="Search stat groups"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />

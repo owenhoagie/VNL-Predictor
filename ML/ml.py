@@ -7,12 +7,12 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GroupKFold, cross_val_score, cross_validate
-from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.model_selection import GroupKFold, cross_validate
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.utils.class_weight import compute_class_weight
 import os
 import joblib
-
-from collections import Counter
 
 # --- Config ---
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,13 +25,42 @@ player_df = pd.read_csv(PLAYER_FILE)
 team_df = pd.read_csv(TEAM_FILE)
 match_df = pd.read_csv(MATCH_FILE)
 
+TEAM_TO_CODE = {
+    "Argentina": "ARG",
+    "Brazil": "BRA",
+    "Bulgaria": "BUL",
+    "Canada": "CAN",
+    "China": "CHN",
+    "Cuba": "CUB",
+    "France": "FRA",
+    "Germany": "GER",
+    "Iran": "IRI",
+    "Italy": "ITA",
+    "Japan": "JPN",
+    "Netherlands": "NED",
+    "Poland": "POL",
+    "Slovenia": "SLO",
+    "Serbia": "SRB",
+    "Türkiye": "TUR",
+    "Turkey": "TUR",
+    "Ukraine": "UKR",
+    "USA": "USA",
+    "United States": "USA",
+}
+
+TEAM_SEASON_ALIASES = {
+    "Turkey": "Türkiye",
+    "United States": "USA",
+}
+
 # --- 2. Aggregate Player Stats to Team Level ---
 def aggregate_team_players(team_name, agg_funcs=None, top_n=8):
     """
     Aggregates player stats for a team using specified aggregation functions.
     Returns a dict of aggregated features.
     """
-    team_players = player_df[player_df['Team'] == team_name]
+    team_code = TEAM_TO_CODE.get(team_name, team_name)
+    team_players = player_df[player_df['Team'] == team_code]
     if team_players.empty:
         # Return NaNs for all features if no players found
         return {f"impact_{func}": np.nan for func in ['mean','median','std','max','min','top8mean']}
@@ -49,10 +78,18 @@ def aggregate_team_players(team_name, agg_funcs=None, top_n=8):
 
 # --- 3. Merge Team Stats ---
 def get_team_season_stats(team_name):
-    row = team_df[team_df['Team'].str.lower() == team_name.lower()]
+    season_name = TEAM_SEASON_ALIASES.get(team_name, team_name)
+    row = team_df[team_df['Team'].str.casefold() == season_name.casefold()]
     if row.empty:
         # Try fuzzy match (for minor name mismatches)
-        row = team_df[team_df['Team'].str.contains(team_name, case=False, na=False)]
+        row = team_df[
+            team_df['Team'].str.contains(
+                season_name,
+                case=False,
+                na=False,
+                regex=False,
+            )
+        ]
     if row.empty:
         # Return NaNs for all columns
         return {f"season_{col}": np.nan for col in team_df.columns if col != 'Team'}
@@ -104,84 +141,111 @@ def extract_set_score(row):
     else:
         return f"{away_sets}-{home_sets}"
 
-feature_rows = []
-labels = []
-groups = []
-set_score_labels = []
-for idx, row in match_df.iterrows():
-    feats = build_match_features(row)
-    feature_rows.append(feats)
-    # Label: 1 if Home Team wins, 0 if not
-    labels.append(1 if row['Winner'] == row['Home Team'] else 0)
-    # Group by Home Team for GroupKFold
-    groups.append(row['Home Team'])
-    # Set score label (winner's perspective)
-    set_score_labels.append(extract_set_score(row))
-X = pd.DataFrame(feature_rows)
-y = np.array(labels)
-groups = np.array(groups)
-set_score_labels = np.array(set_score_labels)
-
-# --- 6. Preprocessing: Fill missing values ---
-X = X.apply(pd.to_numeric, errors='coerce')
-X.fillna(0, inplace=True)
-
-
-# --- 7. Modeling: Logistic Regression (baseline) ---
 MODEL_PATH = os.path.join(DATA_DIR, "logistic_regression_model.pkl")
-clf = LogisticRegression(max_iter=1000, solver='liblinear')
-cv = GroupKFold(n_splits=5)
-scoring = {'accuracy': 'accuracy', 'roc_auc': 'roc_auc'}
-cv_results = cross_validate(clf, X, y, groups=groups, cv=cv, scoring=scoring, return_estimator=True)
-
-print("\n--- Cross-Validation Results (Logistic Regression) ---")
-print("Accuracy (folds):", cv_results['test_accuracy'])
-print("ROC-AUC (folds):", cv_results['test_roc_auc'])
-print("Mean Accuracy:", np.mean(cv_results['test_accuracy']))
-print("Mean ROC-AUC:", np.mean(cv_results['test_roc_auc']))
-
-# --- 8. Feature Importances (Coefficients) ---
-coefs = np.mean([est.coef_[0] for est in cv_results['estimator']], axis=0)
-feat_importance = pd.Series(coefs, index=X.columns).sort_values(key=np.abs, ascending=False)
-print("\nTop 15 Most Important Features (by abs(coef)):")
-print(feat_importance.head(15))
-
-
-# --- Save the trained model and columns ---
-clf_full = LogisticRegression(max_iter=1000, solver='liblinear')
-clf_full.fit(X, y)
-joblib.dump({'model': clf_full, 'columns': X.columns.tolist()}, MODEL_PATH)
-print(f"\nTrained model saved to {MODEL_PATH}")
-
-# --- Train set score prediction model (multinomial logistic regression, balanced, with win prob and feature diff) ---
 SET_SCORE_MODEL_PATH = os.path.join(DATA_DIR, "set_score_model.pkl")
-from sklearn.linear_model import LogisticRegression as MultinomLogReg
-from sklearn.utils.class_weight import compute_class_weight
-# Add actual winner as a one-hot feature for set score model
-set_score_X = X.copy()
-winners = [row['Winner'] for _, row in match_df.iterrows()]
-set_score_X = pd.concat([set_score_X, pd.get_dummies(winners, prefix='winner')], axis=1)
-# Add win probability and feature diff as features
-clf_full_for_prob = LogisticRegression(max_iter=1000, solver='liblinear')
-clf_full_for_prob.fit(X, y)
-win_probs = clf_full_for_prob.predict_proba(X)[:,1]
-set_score_X['win_prob'] = win_probs
-set_score_X['feature_diff'] = X.abs().sum(axis=1)
-# Balance classes
-classes = np.unique(set_score_labels)
-class_weights = compute_class_weight('balanced', classes=classes, y=set_score_labels)
-class_weight_dict = {c: w for c, w in zip(classes, class_weights)}
-set_score_clf = MultinomLogReg(multi_class='multinomial', solver='lbfgs', max_iter=1000, class_weight=class_weight_dict)
-set_score_clf.fit(set_score_X, set_score_labels)
-joblib.dump({'model': set_score_clf, 'columns': set_score_X.columns.tolist(), 'set_score_classes': classes.tolist()}, SET_SCORE_MODEL_PATH)
-print(f"Set score model saved to {SET_SCORE_MODEL_PATH}")
 
-# --- 9. Optional: Random Forest/GBM comparison ---
-# Uncomment to compare
-# rf = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
-# rf_cv = cross_validate(rf, X, y, groups=groups, cv=cv, scoring=scoring)
-# print("\nRandom Forest Mean Accuracy:", np.mean(rf_cv['test_accuracy']))
-# print("Random Forest Mean ROC-AUC:", np.mean(rf_cv['test_roc_auc']))
+
+def build_training_data():
+    feature_rows = []
+    labels = []
+    groups = []
+    set_score_labels = []
+    for _, row in match_df.iterrows():
+        feature_rows.append(build_match_features(row))
+        labels.append(1 if row['Winner'] == row['Home Team'] else 0)
+        groups.append(row['Home Team'])
+        set_score_labels.append(extract_set_score(row))
+    X = pd.DataFrame(feature_rows).apply(pd.to_numeric, errors='coerce').fillna(0)
+    return (
+        X,
+        np.asarray(labels),
+        np.asarray(groups),
+        np.asarray(set_score_labels),
+    )
+
+
+def train_models():
+    X, y, groups, set_score_labels = build_training_data()
+    classifier = make_pipeline(
+        StandardScaler(),
+        LogisticRegression(max_iter=2000, solver='lbfgs'),
+    )
+    cv = GroupKFold(n_splits=5)
+    scoring = {'accuracy': 'accuracy', 'roc_auc': 'roc_auc'}
+    cv_results = cross_validate(
+        classifier,
+        X,
+        y,
+        groups=groups,
+        cv=cv,
+        scoring=scoring,
+        return_estimator=True,
+    )
+
+    print("\n--- Cross-Validation Results (Logistic Regression) ---")
+    print("Accuracy (folds):", cv_results['test_accuracy'])
+    print("ROC-AUC (folds):", cv_results['test_roc_auc'])
+    print("Mean Accuracy:", np.mean(cv_results['test_accuracy']))
+    print("Mean ROC-AUC:", np.mean(cv_results['test_roc_auc']))
+
+    coefficients = np.mean(
+        [
+            estimator.named_steps['logisticregression'].coef_[0]
+            for estimator in cv_results['estimator']
+        ],
+        axis=0,
+    )
+    importance = pd.Series(
+        coefficients,
+        index=X.columns,
+    ).sort_values(key=np.abs, ascending=False)
+    print("\nTop 15 Most Important Features (by abs(coef)):")
+    print(importance.head(15))
+
+    trained_classifier = make_pipeline(
+        StandardScaler(),
+        LogisticRegression(max_iter=2000, solver='lbfgs'),
+    )
+    trained_classifier.fit(X, y)
+    joblib.dump(
+        {'model': trained_classifier, 'columns': X.columns.tolist()},
+        MODEL_PATH,
+    )
+    print(f"\nTrained model saved to {MODEL_PATH}")
+
+    set_score_X = pd.concat(
+        [
+            X.copy(),
+            pd.get_dummies(match_df['Winner'], prefix='winner'),
+        ],
+        axis=1,
+    )
+    set_score_X['win_prob'] = trained_classifier.predict_proba(X)[:, 1]
+    set_score_X['feature_diff'] = X.abs().sum(axis=1)
+    classes = np.unique(set_score_labels)
+    class_weights = compute_class_weight(
+        'balanced',
+        classes=classes,
+        y=set_score_labels,
+    )
+    set_score_classifier = make_pipeline(
+        StandardScaler(),
+        LogisticRegression(
+            solver='lbfgs',
+            max_iter=2000,
+            class_weight=dict(zip(classes, class_weights)),
+        ),
+    )
+    set_score_classifier.fit(set_score_X, set_score_labels)
+    joblib.dump(
+        {
+            'model': set_score_classifier,
+            'columns': set_score_X.columns.tolist(),
+            'set_score_classes': classes.tolist(),
+        },
+        SET_SCORE_MODEL_PATH,
+    )
+    print(f"Set score model saved to {SET_SCORE_MODEL_PATH}")
 
 
 # --- CLI for head-to-head prediction ---
@@ -314,3 +378,11 @@ if __name__ == "__main__":
         predict_match(teamA, teamB)
     elif len(sys.argv) == 2 and sys.argv[1] == "analyze_stats":
         analyze_match_stat_importance()
+    elif len(sys.argv) == 1:
+        train_models()
+    else:
+        print(
+            "Usage: python ML/ml.py [TEAM_A TEAM_B | analyze_stats]",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)

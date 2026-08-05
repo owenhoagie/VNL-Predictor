@@ -1,190 +1,266 @@
-import pandas as pd
+"""Calculate normalized skill and position ratings for VNL players."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
 import numpy as np
-import os
+import pandas as pd
 
-def clamp(x, minv=0, maxv=1):
-    return max(minv, min(x, maxv))
+ROOT_DIR = Path(__file__).resolve().parents[1]
+INPUT_FILE = ROOT_DIR / "merged_stats.csv"
+OUTPUT_FILE = ROOT_DIR / "RatingSystem" / "player_rankings.csv"
 
-def pctl95(series):
-    return np.percentile(series.dropna(), 95) if len(series.dropna()) > 0 else 1
-
-positional_weights = {
+POSITIONAL_WEIGHTS = {
     "OUTSIDE HITTER": {
-        "Attacking": 0.25,
-        "Blocking": 0.15,
-        "Serving": 0.10,
-        "Setting": 0.05,
-        "Defense": 0.15,
-        "Receiving": 0.30
+        "att": 0.25,
+        "blk": 0.15,
+        "serv": 0.10,
+        "set": 0.05,
+        "def": 0.15,
+        "recv": 0.30,
     },
     "OPPOSITE SPIKER": {
-        "Attacking": 0.40,
-        "Blocking": 0.30,
-        "Serving": 0.15,
-        "Setting": 0.05,
-        "Defense": 0.10,
-        "Receiving": 0.0
+        "att": 0.40,
+        "blk": 0.30,
+        "serv": 0.15,
+        "set": 0.05,
+        "def": 0.10,
+        "recv": 0.0,
     },
     "MIDDLE BLOCKER": {
-        "Attacking": 0.25,
-        "Blocking": 0.45,
-        "Serving": 0.15,
-        "Setting": 0.05,
-        "Defense": 0.05,
-        "Receiving": 0.05
+        "att": 0.25,
+        "blk": 0.45,
+        "serv": 0.15,
+        "set": 0.05,
+        "def": 0.05,
+        "recv": 0.05,
     },
     "SETTER": {
-        "Attacking": 0.10,
-        "Blocking": 0.20,
-        "Serving": 0.15,
-        "Setting": 0.45,
-        "Defense": 0.10,
-        "Receiving": 0.0
+        "att": 0.10,
+        "blk": 0.20,
+        "serv": 0.15,
+        "set": 0.45,
+        "def": 0.10,
+        "recv": 0.0,
     },
     "LIBERO": {
-        "Attacking": 0.0,
-        "Blocking": 0.0,
-        "Serving": 0.10,
-        "Setting": 0.10,
-        "Defense": 0.40,
-        "Receiving": 0.40
-    }
+        "att": 0.0,
+        "blk": 0.0,
+        "serv": 0.10,
+        "set": 0.10,
+        "def": 0.40,
+        "recv": 0.40,
+    },
 }
 
-df = pd.read_csv('merged_stats.csv')
-
-# Reference maxima (95th percentile)
-ref_max_attacks_per_match = pctl95(df['Attacks Per Match'])
-ref_max_blocks_per_match = pctl95(df['Blocks Per Match'])
-ref_max_serves_per_match = pctl95(df['Serves Per Match'])
-ref_max_sets_per_match = pctl95(df['Sets Per Match'])
-ref_max_digs_per_match = pctl95(df['Digs Per Match'])
-ref_max_receives_per_match = pctl95(df['Receives Per Match'])
-
-# Attacking
-def attacking(row):
-    K = row['Kills']
-    E = row['Attacking Errors']
-    A = row['Attacking Attempts']
-    KPM = row['Kills Per Match'] if 'Kills Per Match' in row else row['Attacks Per Match']
-    eff = (K - E) / A if A > 0 else 0
-    vol = KPM / df['Kills Per Match'].max() if 'Kills Per Match' in df else KPM / df['Attacks Per Match'].max()
-    raw = (max(eff, 0) ** 0.5) * (max(vol, 0) ** 1.2)
-    return [eff, vol, raw]
-
-# Blocking
-def blocking(row):
-    B = row['Blocks']
-    BE = row['Blocking Errors']
-    R = row['Rebounds']
-    BPM = row['Blocks Per Match']
-    denom = B + BE + R
-    # Weigh errors less: use only blocks over total attempts
-    eff = B / denom if denom > 0 else 0
-    vol = BPM / df['Blocks Per Match'].max()
-    raw = (max(eff, 0) ** 0.4) * (max(vol, 0) ** 1.3)
-    return [eff, vol, raw]
-
-# Serving
-def serving(row):
-    A = row['Aces']
-    SE = row['Service Errors']
-    SA = row['Service Attempts']
-    APM = row['Aces Per Match'] if 'Aces Per Match' in row else row['Serves Per Match']
-    # Weigh errors less: use only aces over attempts
-    eff = A / SA if SA > 0 else 0
-    vol = APM / df['Aces Per Match'].max() if 'Aces Per Match' in df else APM / df['Serves Per Match'].max()
-    raw = (max(eff, 0) ** 0.6) * (max(vol, 0) ** 1.1)
-    return [eff, vol, raw]
-
-# Setting
-def setting(row):
-    RS = row['Running Sets']
-    SS = row['Still Sets']
-    SE = row['Setting Errors']
-    SPM = row['Sets Per Match']
-    denom = RS + SS + SE
-    eff = RS / denom if denom > 0 else 0
-    vol = SPM / df['Sets Per Match'].max()
-    raw = (max(eff, 0) ** 0.5) * (max(vol, 0) ** 1.2)
-    return [eff, vol, raw]
-
-# Defense
-def defense(row):
-    GS = row['Great Saves']
-    DE = row['Defensive Errors']
-    DR = row['Defensive Receptions']
-    DPM = row['Digs Per Match']
-    eff = (GS - DE) / DR if DR > 0 else 0
-    vol = DPM / df['Digs Per Match'].max()
-    raw = (max(eff, 0) ** 0.4) * (max(vol, 0) ** 1.3)
-    return [eff, vol, raw]
-
-# Receiving
-def receiving(row):
-    SR = row['Successful Receives']
-    RE = row['Receiving Errors']
-    SRc = row['Service Receptions']
-    RPM = row['Receives Per Match']
-    eff = (SR - RE) / SRc if SRc > 0 else 0
-    vol = RPM / df['Receives Per Match'].max()
-    raw = (max(eff, 0) ** 0.5) * (max(vol, 0) ** 1.2)
-    return [eff, vol, raw]
-
-# Apply formulas
-for cat, func in zip(
-    ['att', 'blk', 'serv', 'set', 'def', 'recv'],
-    [attacking, blocking, serving, setting, defense, receiving]
-):
-    df[[f'{cat}_eff', f'{cat}_vol', f'{cat}_raw']] = df.apply(lambda row: func(row), axis=1, result_type='expand')
-    max_raw = df[f'{cat}_raw'].max()
-    df[f'rating_{cat}'] = (100 * df[f'{cat}_raw'] / max_raw).round(2) if max_raw > 0 else 0
-
-# Calculate positional weighted rating for each player
-position_map = {
-    'LIBERO': 'LIBERO',
-    'OUTSIDE HITTER': 'OUTSIDE HITTER',
-    'OPPOSITE HITTER': 'OPPOSITE SPIKER',
-    'SETTER': 'SETTER',
-    'MIDDLE BLOCKER': 'MIDDLE BLOCKER'
+POSITION_ALIASES = {
+    "OPPOSITE HITTER": "OPPOSITE SPIKER",
 }
-def get_raw_positional_rating(row):
-    pos = row['Position']
-    pos_full = position_map.get(pos, pos)
-    weights = positional_weights.get(pos_full, positional_weights['OUTSIDE HITTER'])
-    rating = sum([
-        weights['Attacking'] * row['rating_att'],
-        weights['Blocking'] * row['rating_blk'],
-        weights['Serving'] * row['rating_serv'],
-        weights['Setting'] * row['rating_set'],
-        weights['Defense'] * row['rating_def'],
-        weights['Receiving'] * row['rating_recv']
-    ])
-    return rating
 
-df['raw_positional_rating'] = df.apply(get_raw_positional_rating, axis=1)
-
-# Normalize positional rating by position group
-for pos_name in positional_weights.keys():
-    mask = df['Position'].str.strip().str.upper().map(position_map.get).fillna(df['Position'].str.strip().str.upper()) == pos_name
-    max_rating = df.loc[mask, 'raw_positional_rating'].max()
-    df.loc[mask, 'positional_rating'] = (100 * df.loc[mask, 'raw_positional_rating'] / max_rating).round(2) if max_rating > 0 else 0
-
-# Output with positional rating as first value after player, team, position
-out_cols = [
-    'Player Name', 'Team', 'Position', 'positional_rating',
-    'rating_att', 'att_eff', 'att_vol', 'att_raw',
-    'rating_blk', 'blk_eff', 'blk_vol', 'blk_raw',
-    'rating_serv', 'serv_eff', 'serv_vol', 'serv_raw',
-    'rating_set', 'set_eff', 'set_vol', 'set_raw',
-    'rating_def', 'def_eff', 'def_vol', 'def_raw',
-    'rating_recv', 'recv_eff', 'recv_vol', 'recv_raw'
+OUTPUT_COLUMNS = [
+    "Player Name",
+    "Team",
+    "Position",
+    "positional_rating",
+    "rating_att",
+    "att_eff",
+    "att_vol",
+    "att_raw",
+    "rating_blk",
+    "blk_eff",
+    "blk_vol",
+    "blk_raw",
+    "rating_serv",
+    "serv_eff",
+    "serv_vol",
+    "serv_raw",
+    "rating_set",
+    "set_eff",
+    "set_vol",
+    "set_raw",
+    "rating_def",
+    "def_eff",
+    "def_vol",
+    "def_raw",
+    "rating_recv",
+    "recv_eff",
+    "recv_vol",
+    "recv_raw",
 ]
-# Round all decimals to the hundredths for output columns
-for col in out_cols:
-    if df[col].dtype in [float, np.float64, np.float32]:
-        df[col] = df[col].round(2)
 
-os.makedirs('RatingSystem', exist_ok=True)
-df[out_cols].to_csv('RatingSystem/player_rankings.csv', index=False)
-print("Player rankings saved to RatingSystem/player_rankings.csv with normalized positional ratings.")
+
+def safe_divide(numerator: pd.Series, denominator: pd.Series | float) -> pd.Series:
+    if isinstance(denominator, pd.Series):
+        return numerator.div(denominator.where(denominator > 0)).fillna(0)
+    if denominator <= 0:
+        return pd.Series(0.0, index=numerator.index)
+    return numerator / denominator
+
+
+def add_rating(
+    frame: pd.DataFrame,
+    category: str,
+    efficiency: pd.Series,
+    volume: pd.Series,
+    efficiency_power: float,
+    volume_power: float,
+) -> None:
+    raw = efficiency.clip(lower=0).pow(efficiency_power) * (
+        volume.clip(lower=0).pow(volume_power)
+    )
+    frame[f"{category}_eff"] = efficiency
+    frame[f"{category}_vol"] = volume
+    frame[f"{category}_raw"] = raw
+    maximum = raw.max()
+    frame[f"rating_{category}"] = (
+        (100 * raw / maximum).round(2)
+        if maximum > 0
+        else 0.0
+    )
+
+
+def calculate_ratings(frame: pd.DataFrame) -> pd.DataFrame:
+    data = frame.copy()
+
+    attacking_efficiency = safe_divide(
+        data["Kills"] - data["Attacking Errors"],
+        data["Attacking Attempts"],
+    )
+    attack_volume_column = (
+        "Kills Per Match"
+        if "Kills Per Match" in data
+        else "Attacks Per Match"
+    )
+    add_rating(
+        data,
+        "att",
+        attacking_efficiency,
+        safe_divide(
+            data[attack_volume_column],
+            data[attack_volume_column].max(),
+        ),
+        0.5,
+        1.2,
+    )
+
+    block_attempts = (
+        data["Blocks"] + data["Blocking Errors"] + data["Rebounds"]
+    )
+    add_rating(
+        data,
+        "blk",
+        safe_divide(data["Blocks"], block_attempts),
+        safe_divide(data["Blocks Per Match"], data["Blocks Per Match"].max()),
+        0.4,
+        1.3,
+    )
+
+    serve_volume_column = (
+        "Aces Per Match"
+        if "Aces Per Match" in data
+        else "Serves Per Match"
+    )
+    add_rating(
+        data,
+        "serv",
+        safe_divide(data["Aces"], data["Service Attempts"]),
+        safe_divide(
+            data[serve_volume_column],
+            data[serve_volume_column].max(),
+        ),
+        0.6,
+        1.1,
+    )
+
+    set_attempts = (
+        data["Running Sets"] + data["Still Sets"] + data["Setting Errors"]
+    )
+    add_rating(
+        data,
+        "set",
+        safe_divide(data["Running Sets"], set_attempts),
+        safe_divide(data["Sets Per Match"], data["Sets Per Match"].max()),
+        0.5,
+        1.2,
+    )
+
+    add_rating(
+        data,
+        "def",
+        safe_divide(
+            data["Great Saves"] - data["Defensive Errors"],
+            data["Defensive Receptions"],
+        ),
+        safe_divide(data["Digs Per Match"], data["Digs Per Match"].max()),
+        0.4,
+        1.3,
+    )
+
+    add_rating(
+        data,
+        "recv",
+        safe_divide(
+            data["Successful Receives"] - data["Receiving Errors"],
+            data["Service Receptions"],
+        ),
+        safe_divide(
+            data["Receives Per Match"],
+            data["Receives Per Match"].max(),
+        ),
+        0.5,
+        1.2,
+    )
+
+    normalized_positions = (
+        data["Position"]
+        .str.strip()
+        .str.upper()
+        .replace(POSITION_ALIASES)
+    )
+    weight_frame = pd.DataFrame(
+        [
+            POSITIONAL_WEIGHTS.get(
+                position,
+                POSITIONAL_WEIGHTS["OUTSIDE HITTER"],
+            )
+            for position in normalized_positions
+        ],
+        index=data.index,
+    )
+    rating_columns = [
+        f"rating_{category}"
+        for category in ("att", "blk", "serv", "set", "def", "recv")
+    ]
+    data["raw_positional_rating"] = (
+        data[rating_columns].to_numpy() * weight_frame.to_numpy()
+    ).sum(axis=1)
+
+    data["positional_rating"] = 0.0
+    for position in POSITIONAL_WEIGHTS:
+        mask = normalized_positions == position
+        maximum = data.loc[mask, "raw_positional_rating"].max()
+        if pd.notna(maximum) and maximum > 0:
+            data.loc[mask, "positional_rating"] = (
+                100
+                * data.loc[mask, "raw_positional_rating"]
+                / maximum
+            ).round(2)
+
+    numeric_columns = data[OUTPUT_COLUMNS].select_dtypes(
+        include=[np.number]
+    ).columns
+    data[numeric_columns] = data[numeric_columns].round(2)
+    return data[OUTPUT_COLUMNS]
+
+
+def main() -> None:
+    player_stats = pd.read_csv(INPUT_FILE)
+    rankings = calculate_ratings(player_stats)
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    rankings.to_csv(OUTPUT_FILE, index=False)
+    print(f"Player rankings saved to {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()

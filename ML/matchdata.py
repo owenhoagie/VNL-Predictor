@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,6 +8,7 @@ import csv
 import time
 import os
 from datetime import datetime
+from Collection.browser import create_chrome_driver
 
 # Config
 SCHEDULE_URL = "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/schedule/#fromDate=2025-08-02&gender=men&undefined=men"
@@ -18,12 +18,6 @@ END_WEEK_LABEL = "30 MAY"
 chrome_options = Options()
 # Commenting out headless mode for debugging
 # chrome_options.add_argument("--headless")
-
-# Add debugging output to ensure the browser opens
-print("Initializing Selenium...")
-service = ChromeService()
-driver = webdriver.Chrome(service=service, options=chrome_options)
-print("Selenium initialized successfully.")
 
 # Mapping table for converting table row names to human-readable names
 STAT_NAME_MAPPING = {
@@ -238,6 +232,9 @@ def scrape_team_stats(driver):
     return team_stats
 
 def main():
+    print("Initializing Selenium...")
+    driver = create_chrome_driver(chrome_options)
+    print("Selenium initialized successfully.")
     all_rows = []
     try:
         driver.get(SCHEDULE_URL)

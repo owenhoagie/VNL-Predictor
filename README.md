@@ -8,6 +8,25 @@
 
 **A full-stack, automated pipeline for scraping, processing, modeling, and visualizing Volleyball Nations League (VNL) player and match data.**
 
+## Current Status
+
+The repository was audited and modernized in August 2026. The checked-in app,
+prediction API, rating pipeline, trained models, and generated artifacts pass the
+automated verification suite. The current checked-in dataset is the 2025 men's
+VNL dataset.
+
+```sh
+# Backend and data/model verification
+python -m unittest discover -s tests -v
+
+# Frontend verification
+cd vnl-visualizer
+npm run check
+```
+
+See [`docs/CODEBASE_AUDIT.md`](docs/CODEBASE_AUDIT.md) for verified behavior,
+remaining data/model limitations, and the optimization summary.
+
 ---
 
 ## Table of Contents
@@ -181,6 +200,7 @@ python ML/teamdata.py
 python Collection/merge.py
 python RatingSystem/playerrankings.py
 python RatingSystem/mergeratings.py
+python scripts/sync_artifacts.py
 ```
 
 ### 2. Machine Learning
@@ -188,6 +208,7 @@ python RatingSystem/mergeratings.py
 **Train models:**
 ```sh
 python ML/ml.py
+python scripts/sync_artifacts.py
 ```
 
 **Predict a match (CLI):**
@@ -207,21 +228,31 @@ python ML/ml.py analyze_stats
 **Setup:**
 ```sh
 cd vnl-visualizer
-npm install
+npm ci
 npm run dev
 # Visit http://localhost:5173
 ```
+
+The Vite development server proxies `/api` to `http://127.0.0.1:5050`.
+Run `python scripts/serve_api.py` from the repository root in a second terminal
+to enable local predictions. Set `VNL_API_PORT` to override the API port.
+Production uses the Vercel Python function in `vnl-visualizer/api/predict.py`.
+The linked Vercel project uses `vnl-visualizer/` as its project root.
 
 ---
 
 ## Development Notes
 
-- All scrapers use Selenium and require WebDriver installed and in PATH
+- All scrapers use Selenium and require Google Chrome
+- Scrapers use Selenium Manager to select a compatible ChromeDriver
 - Data pipeline is modular: you can re-run any step independently
 - All CSVs are UTF-8 encoded
 - ML pipeline is fully reproducible; retrain with new data as needed
 - Frontend expects `merged_stats.csv` in the appropriate location (see code)
-- For production, consider Dockerizing the pipeline and/or deploying the frontend
+- Run `python scripts/sync_artifacts.py` after regenerating data or models
+- Player-stat URLs follow Volleyball World's current competition, while the
+  match collector is currently fixed to the 2025 schedule. Do not rerun a
+  partial scrape for a different season and combine it with the checked-in data.
 
 ---
 

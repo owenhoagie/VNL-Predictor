@@ -1,105 +1,125 @@
+"""Scrape player profile attributes from Volleyball World."""
+
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import csv
-import time
-import os
+from selenium.webdriver.support.ui import WebDriverWait
+from Collection.browser import create_chrome_driver
 
-# Config: specify which fields to extract from player profile
 PROFILE_FIELDS = ["Position", "Age", "Height"]
+PLAYER_STATS_URL = (
+    "https://en.volleyballworld.com/volleyball/competitions/"
+    "volleyball-nations-league/statistics/men/best-scorers/"
+)
+OUTPUT_FILE = (
+    Path(__file__).resolve().parents[1] / "Dataset" / "player_profiles.csv"
+)
 
-url = "https://en.volleyballworld.com/volleyball/competitions/volleyball-nations-league/statistics/men/best-scorers/"
-chrome_options = Options()
-# chrome_options.add_argument("--headless")
-service = ChromeService()
-driver = webdriver.Chrome(service=service, options=chrome_options)
 
-def scrape_player_profile(driver, profile_url, fields):
+def scrape_player_profile(
+    driver: webdriver.Chrome,
+    profile_url: str,
+    fields: list[str],
+) -> dict[str, str]:
     driver.get(profile_url)
-    # Wait until at least one bio col is present
-    wait = WebDriverWait(driver, 30)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "vbw-player-bio-col")))
-    bio_cols = driver.find_elements(By.CLASS_NAME, "vbw-player-bio-col")
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "vbw-player-bio-col"))
+    )
     data = {field: "" for field in fields}
-    for col in bio_cols:
+    for column in driver.find_elements(By.CLASS_NAME, "vbw-player-bio-col"):
         try:
-            head = col.find_element(By.CLASS_NAME, "vbw-player-bio-head").text.strip()
-            value = col.find_element(By.CLASS_NAME, "vbw-player-bio-text").text.strip()
-            if head in data:
-                data[head] = value
+            heading = column.find_element(
+                By.CLASS_NAME,
+                "vbw-player-bio-head",
+            ).text.strip()
+            value = column.find_element(
+                By.CLASS_NAME,
+                "vbw-player-bio-text",
+            ).text.strip()
+            if heading in data:
+                data[heading] = value
         except Exception:
             continue
     return data
 
-try:
-    driver.get(url)
-    wait = WebDriverWait(driver, 60)
-    table = wait.until(EC.presence_of_element_located(
-        (By.CSS_SELECTOR, "table.vbw-o-table.vbw-tournament-player-statistic-table.vbw-stats-scorers")
-    ))
-    time.sleep(2)
 
-    # Step 1: Collect all player info from main table
-    player_infos = []
-    for row_elem in table.find_elements(By.CSS_SELECTOR, "tbody tr"):
-        cells = row_elem.find_elements(By.TAG_NAME, "td")
-        # Find player name cell and extract link
-        player_cell = None
-        for cell in cells:
-            if "playername" in cell.get_attribute("class"):
-                player_cell = cell
-                break
-        if player_cell:
-            player_name = player_cell.text
-            link_elem = player_cell.find_element(By.TAG_NAME, "a")
-            profile_link = link_elem.get_attribute("href") if link_elem else ""
-        else:
-            player_name = ""
-            profile_link = ""
-        # Find team cell
-        team = ""
-        for cell in cells:
-            if "federation" in cell.get_attribute("class"):
-                team = cell.text
-                break
-        player_infos.append({"Player Name": player_name, "Team": team, "Profile Link": profile_link})
+def collect_player_links(driver: webdriver.Chrome) -> list[dict[str, str]]:
+    driver.get(PLAYER_STATS_URL)
+    table = WebDriverWait(driver, 60).until(
+        EC.presence_of_element_located(
+            (
+                By.CSS_SELECTOR,
+                "table.vbw-o-table.vbw-tournament-player-statistic-table"
+                ".vbw-stats-scorers",
+            )
+        )
+    )
+    return driver.execute_script(
+        """
+        return Array.from(arguments[0].querySelectorAll('tbody tr'))
+          .map((row) => {
+            const player = row.querySelector('td.playername');
+            const team = row.querySelector('td.federation');
+            const link = player?.querySelector('a');
+            return {
+              'Player Name': player?.innerText.trim() ?? '',
+              'Team': team?.innerText.trim() ?? '',
+              'Profile Link': link?.href ?? '',
+            };
+          })
+          .filter((player) => player['Player Name']);
+        """,
+        table,
+    )
 
-    # Step 2: For each player, visit their profile and scrape details
-    rows = []
-    total_players = len(player_infos)
-    for idx, info in enumerate(player_infos):
-        try:
-            if info["Profile Link"]:
-                profile_data = scrape_player_profile(driver, info["Profile Link"], PROFILE_FIELDS)
-            else:
-                profile_data = {field: "" for field in PROFILE_FIELDS}
-        except Exception as e:
-            print(f"Error scraping {info['Player Name']} ({info['Profile Link']}): {e}")
-            profile_data = {field: "" for field in PROFILE_FIELDS}
-        row = [info["Player Name"], info["Team"]] + [profile_data[field] for field in PROFILE_FIELDS]
-        rows.append(row)
-        # Print log after each successful scrape
-        name = info["Player Name"]
-        age = profile_data.get("Age", "")
-        height = profile_data.get("Height", "")
-        position = profile_data.get("Position", "")
-        print(f"{name} - {age} - {height} - {position} ({idx+1}/{total_players})")
-        # No sleep needed, we wait for elements instead
 
-    # Save to CSV
-    dataset_dir = "Dataset"
-    if not os.path.exists(dataset_dir):
-        os.makedirs(dataset_dir)
-    with open(os.path.join(dataset_dir, "player_profiles.csv"), mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        header = ["Player Name", "Team"] + PROFILE_FIELDS
-        writer.writerow(header)
-        writer.writerows(rows)
+def main() -> None:
+    driver = create_chrome_driver(Options())
+    try:
+        players = collect_player_links(driver)
+        rows: list[list[str]] = []
+        for index, player in enumerate(players, start=1):
+            try:
+                profile = (
+                    scrape_player_profile(
+                        driver,
+                        player["Profile Link"],
+                        PROFILE_FIELDS,
+                    )
+                    if player["Profile Link"]
+                    else {field: "" for field in PROFILE_FIELDS}
+                )
+            except Exception as error:
+                print(
+                    f"Error scraping {player['Player Name']} "
+                    f"({player['Profile Link']}): {error}"
+                )
+                profile = {field: "" for field in PROFILE_FIELDS}
+            rows.append(
+                [player["Player Name"], player["Team"]]
+                + [profile[field] for field in PROFILE_FIELDS]
+            )
+            print(
+                f"{player['Player Name']} - {profile['Age']} - "
+                f"{profile['Height']} - {profile['Position']} "
+                f"({index}/{len(players)})"
+            )
 
-    print(f"Player profile data saved to {os.path.join(dataset_dir, 'player_profiles.csv')}")
+        OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with OUTPUT_FILE.open("w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Player Name", "Team", *PROFILE_FIELDS])
+            writer.writerows(rows)
+        print(f"Player profile data saved to {OUTPUT_FILE}")
+    finally:
+        driver.quit()
 
-finally:
-    driver.quit()
+
+if __name__ == "__main__":
+    main()

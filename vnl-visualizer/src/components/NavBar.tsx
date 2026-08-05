@@ -8,17 +8,29 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar-content">
-        <div className="navbar-logo">VNL Visualized</div>
-        <button className="navbar-hamburger" onClick={() => setMenuOpen((o) => !o)} aria-label="Toggle menu">
+        <Link to="/" className="navbar-logo" onClick={() => setMenuOpen(false)}>
+          <span className="navbar-mark" aria-hidden="true">V</span>
+          <span className="navbar-wordmark">
+            <strong>VNL</strong>
+            <small>Data Lab</small>
+          </span>
+        </Link>
+        <button
+          className="navbar-hamburger"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-controls="primary-navigation"
+          aria-expanded={menuOpen}
+          aria-label="Toggle menu"
+        >
           <span className="bar"></span>
           <span className="bar"></span>
           <span className="bar"></span>
         </button>
-        <div className={`navbar-links${menuOpen ? ' open' : ''}`}>
+        <div id="primary-navigation" className={`navbar-links${menuOpen ? ' open' : ''}`}>
           <Link to="/" className={location.pathname === '/' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/visualize" className={location.pathname === '/visualize' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Visualization</Link>
-          <Link to="/lookup" className={location.pathname === '/lookup' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Lookup</Link>
-          <Link to="/predict" className={location.pathname === '/predict' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Prediction</Link>
+          <Link to="/visualize" className={location.pathname === '/visualize' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Explore</Link>
+          <Link to="/lookup" className={location.pathname === '/lookup' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Players</Link>
+          <Link to="/predict" className={location.pathname === '/predict' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Predict</Link>
         </div>
       </div>
     </nav>

@@ -1,136 +1,30 @@
-// Country code to name mapping
-const COUNTRY_NAMES: Record<string, string> = {
-  ARG: 'Argentina',
-  BRA: 'Brazil',
-  BUL: 'Bulgaria',
-  CAN: 'Canada',
-  CHN: 'China',
-  CUB: 'Cuba',
-  FRA: 'France',
-  GER: 'Germany',
-  IRI: 'Iran',
-  ITA: 'Italy',
-  JPN: 'Japan',
-  NED: 'Netherlands',
-  POL: 'Poland',
-  SLO: 'Slovenia',
-  SRB: 'Serbia',
-  TUR: 'Turkey',
-  UKR: 'Ukraine',
-  USA: 'USA',
-};
 import { useEffect, useMemo, useState } from 'react'
-import Papa from 'papaparse'
-import { Chart, registerables } from 'chart.js'
+import {
+  Chart,
+  Legend,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  type ActiveElement,
+  type ChartEvent,
+  type ChartOptions,
+  type TooltipItem,
+} from 'chart.js'
 import { Scatter } from 'react-chartjs-2'
 import MultiSelect from './components/MultiSelect'
 import StatAxisSelect from './components/StatAxisSelect'
 import StatGroupFilter from './components/StatGroupFilter'
-Chart.register(...registerables)
+import {
+  COUNTRY_CODES,
+  COUNTRY_NAMES,
+  formatPosition,
+  getDisplayLabel,
+  loadPlayers,
+  type AxisKey,
+  type PlayerRecord,
+} from './data/playerData'
 
-type PlayerRecord = {
-  'Player Name': string
-  'Team': string
-  'Position': string
-  'Age': number
-  'Height': number
-  // Ratings
-  'Impact': number
-  'Attacking Rating': number
-  'Blocking Rating': number
-  'Serving Rating': number
-  'Setting Rating': number
-  'Defense Rating': number
-  'Receiving Rating': number
-  // Attacking stats
-  'Kills': number
-  'Attacking Errors': number
-  'Attacking Attempts': number
-  'Attacks Per Match': number
-  // Blocking stats
-  'Blocks': number
-  'Blocking Errors': number
-  'Rebounds': number
-  'Blocks Per Match': number
-  // Serving stats
-  'Aces': number
-  'Service Errors': number
-  'Service Attempts': number
-  'Serves Per Match': number
-  // Setting stats
-  'Running Sets': number
-  'Setting Errors': number
-  'Still Sets': number
-  'Sets Per Match': number
-  // Defense stats
-  'Great Saves': number
-  'Defensive Errors': number
-  'Defensive Receptions': number
-  'Digs Per Match': number
-  // Receiving stats
-  'Successful Receives': number
-  'Receiving Errors': number
-  'Service Receptions': number
-  'Receives Per Match': number
-}
-
-const numericAxes = [
-  // Ratings (new stat group)
-  'Impact',
-  'Attacking Rating',
-  'Blocking Rating',
-  'Serving Rating',
-  'Setting Rating',
-  'Defense Rating',
-  'Receiving Rating',
-  // Age / Height
-  'Age',
-  'Height',
-  // Attacking stats
-  'Kills',
-  'Attacking Errors',
-  'Attacking Attempts',
-  'Attacks Per Match',
-  // Blocking stats
-  'Blocks',
-  'Blocking Errors',
-  'Rebounds',
-  'Blocks Per Match',
-  // Serving stats
-  'Aces',
-  'Service Errors',
-  'Service Attempts',
-  'Serves Per Match',
-  // Setting stats
-  'Running Sets',
-  'Setting Errors',
-  'Still Sets',
-  'Sets Per Match',
-  // Defense stats
-  'Great Saves',
-  'Defensive Errors',
-  'Digs Per Match',
-  'Defensive Receptions',
-  // Receiving stats
-  'Successful Receives',
-  'Receiving Errors',
-  'Service Receptions',
-  'Receives Per Match',
-] as const
-
-type AxisKey = typeof numericAxes[number]
-
-function parseHeightToNumber(value: string): number {
-  if (!value) return NaN
-  const match = value.match(/\d+/)
-  return match ? Number(match[0]) : NaN
-}
-
-function getDisplayLabel(key: string): string {
-  if (key === "Height") return "Height (cm)";
-  if (key === "Age") return "Age (years)";
-  return key;
-}
+Chart.register(LinearScale, PointElement, Tooltip, Legend)
 
 function App() {
   const [rawData, setRawData] = useState<PlayerRecord[]>([])
@@ -145,72 +39,27 @@ function App() {
   const [statGroupsSelected, setStatGroupsSelected] = useState<string[]>([])
 
   useEffect(() => {
-    fetch('/merged_stats.csv')
-      .then((r) => {
-        if (!r.ok) throw new Error(`Failed to load CSV: ${r.status}`)
-        return r.text()
-      })
-      .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: false, skipEmptyLines: true })
-        const rows = (parsed.data as any[]).filter((r) => r && r['Player Name'])
-        const normalized: PlayerRecord[] = rows.map((r) => ({
-          'Player Name': r['Player Name'],
-          'Team': r['Team'],
-          'Position': r['Position'],
-          'Age': Number(r['Age']),
-          'Height': parseHeightToNumber(String(r['Height'])),
-          // Ratings
-          'Impact': Number(r['Impact']),
-          'Attacking Rating': Number(r['Attacking Rating']),
-          'Blocking Rating': Number(r['Blocking Rating']),
-          'Serving Rating': Number(r['Serving Rating']),
-          'Setting Rating': Number(r['Setting Rating']),
-          'Defense Rating': Number(r['Defense Rating']),
-          'Receiving Rating': Number(r['Receiving Rating']),
-          // Attacking stats
-          'Kills': Number(r['Kills']),
-          'Attacking Errors': Number(r['Attacking Errors']),
-          'Attacking Attempts': Number(r['Attacking Attempts']),
-          'Attacks Per Match': Number(r['Attacks Per Match']),
-          // Blocking stats
-          'Blocks': Number(r['Blocks']),
-          'Blocking Errors': Number(r['Blocking Errors']),
-          'Rebounds': Number(r['Rebounds']),
-          'Blocks Per Match': Number(r['Blocks Per Match']),
-          // Serving stats
-          'Aces': Number(r['Aces']),
-          'Service Errors': Number(r['Service Errors']),
-          'Service Attempts': Number(r['Service Attempts']),
-          'Serves Per Match': Number(r['Serves Per Match']),
-          // Setting stats
-          'Running Sets': Number(r['Running Sets']),
-          'Setting Errors': Number(r['Setting Errors']),
-          'Still Sets': Number(r['Still Sets']),
-          'Sets Per Match': Number(r['Sets Per Match']),
-          // Defense stats
-          'Great Saves': Number(r['Great Saves']),
-          'Defensive Errors': Number(r['Defensive Errors']),
-          'Defensive Receptions': Number(r['Defensive Receptions']),
-          'Digs Per Match': Number(r['Digs Per Match']),
-          // Receiving stats
-          'Successful Receives': Number(r['Successful Receives']),
-          'Receiving Errors': Number(r['Receiving Errors']),
-          'Service Receptions': Number(r['Service Receptions']),
-          'Receives Per Match': Number(r['Receives Per Match']),
-        }))
-        setRawData(normalized)
+    let active = true
+    loadPlayers()
+      .then((players) => {
+        if (!active) return
+        setRawData(players)
         setLoading(false)
       })
-      .catch((e) => {
-        console.error(e)
-        setError(e.message || 'Failed to load data')
+      .catch((reason: unknown) => {
+        if (!active) return
+        const message = reason instanceof Error ? reason.message : 'Failed to load data'
+        setError(message)
         setLoading(false)
       })
+    return () => {
+      active = false
+    }
   }, [])
 
   // For dropdown: show full country names
   const teams = useMemo(() => Array.from(new Set(rawData.map((r) => COUNTRY_NAMES[r.Team] || r.Team))).sort(), [rawData])
-  const positions = useMemo(() => Array.from(new Set(rawData.map((r) => r.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())))).sort(), [rawData])
+  const positions = useMemo(() => Array.from(new Set(rawData.map((r) => formatPosition(r.Position)))).sort(), [rawData])
 
   const ageMinMax = useMemo(() => {
     const vals = rawData.map((r) => r.Age).filter((n) => Number.isFinite(n))
@@ -226,28 +75,32 @@ function App() {
 
   useEffect(() => {
     setAgeRange(ageMinMax)
-  }, [ageMinMax[0], ageMinMax[1]])
+  }, [ageMinMax])
 
   useEffect(() => {
     setHeightRange(heightMinMax)
-  }, [heightMinMax[0], heightMinMax[1]])
+  }, [heightMinMax])
 
   const filtered = useMemo(() => {
+    const selectedTeamCodes = new Set(
+      teamsSelected.map((team) => COUNTRY_CODES.get(team) ?? team),
+    )
+    const selectedPositions = new Set(
+      positionsSelected.map((position) => position.toUpperCase()),
+    )
+
     return rawData.filter((r) => {
-      if (teamsSelected.length > 0 && !teamsSelected.map(t => Object.keys(COUNTRY_NAMES).find(k => COUNTRY_NAMES[k] === t) || t).includes(r.Team)) return false
-      if (positionsSelected.length > 0 && !positionsSelected.map(p => p.toUpperCase()).includes(r.Position)) return false
+      if (selectedTeamCodes.size > 0 && !selectedTeamCodes.has(r.Team)) return false
+      if (selectedPositions.size > 0 && !selectedPositions.has(r.Position)) return false
       if (Number.isFinite(r.Age)) {
         if (r.Age < ageRange[0] || r.Age > ageRange[1]) return false
       }
       if (Number.isFinite(r.Height)) {
         if (r.Height < heightRange[0] || r.Height > heightRange[1]) return false
       }
-      // If axis is a rating, filter out NaN or missing values
-      if (numericAxes.includes(xKey as AxisKey) && r[xKey as AxisKey] == null) return false;
-      if (numericAxes.includes(yKey as AxisKey) && r[yKey as AxisKey] == null) return false;
       return true
     })
-  }, [rawData, teamsSelected, positionsSelected, ageRange, heightRange, xKey, yKey])
+  }, [rawData, teamsSelected, positionsSelected, ageRange, heightRange])
 
   const chartPoints = useMemo(() => {
     return filtered
@@ -261,9 +114,11 @@ function App() {
         {
           label: `${xKey} vs ${yKey}`,
           data: chartPoints,
-          backgroundColor: 'rgba(79,70,229,0.85)',
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          backgroundColor: '#d83b20',
+          borderColor: '#ffffff',
+          borderWidth: 1.5,
+          pointRadius: 4.5,
+          pointHoverRadius: 7,
         },
       ],
     }
@@ -291,40 +146,65 @@ function App() {
     }
   }, [chartPoints])
 
-  const chartOptions = useMemo(() => ({
+  const chartOptions = useMemo<ChartOptions<'scatter'>>(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: {
+        backgroundColor: '#151719',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        padding: 12,
+        cornerRadius: 2,
         callbacks: {
-          label: (ctx: any) => {
-            const r: PlayerRecord = ctx.raw.raw;
-            return `${r['Player Name']} (${r.Team}) — ${getDisplayLabel(xKey)}: ${ctx.raw.x}, ${getDisplayLabel(yKey)}: ${ctx.raw.y}`;
+          label: (context: TooltipItem<'scatter'>) => {
+            const point = context.raw as (typeof chartPoints)[number]
+            const player = point.raw
+            return `${player['Player Name']} (${player.Team}) — ${getDisplayLabel(xKey)}: ${point.x}, ${getDisplayLabel(yKey)}: ${point.y}`
           },
         },
       },
     },
     scales: {
-      x: { title: { display: true, text: getDisplayLabel(xKey) }, min: axisBounds.xMin, max: axisBounds.xMax },
-      y: { title: { display: true, text: getDisplayLabel(yKey) }, min: axisBounds.yMin, max: axisBounds.yMax },
+      x: {
+        title: { display: true, text: getDisplayLabel(xKey), color: '#151719', font: { weight: 700 } },
+        ticks: { color: '#697078' },
+        grid: { color: '#e6e2da' },
+        border: { color: '#c9c4ba' },
+        min: axisBounds.xMin,
+        max: axisBounds.xMax,
+      },
+      y: {
+        title: { display: true, text: getDisplayLabel(yKey), color: '#151719', font: { weight: 700 } },
+        ticks: { color: '#697078' },
+        grid: { color: '#e6e2da' },
+        border: { color: '#c9c4ba' },
+        min: axisBounds.yMin,
+        max: axisBounds.yMax,
+      },
     },
     animation: { duration: 250 },
-    parsing: false as const,
-    onClick: (_evt: any, elements: any[]) => {
-      if (!elements || elements.length === 0) return
+    parsing: false,
+    onClick: (_event: ChartEvent, elements: ActiveElement[]) => {
+      if (elements.length === 0) return
       const first = elements[0]
-      const r: PlayerRecord = chartPoints[first.index].raw
-      setSelected(r)
+      setSelected(chartPoints[first.index].raw)
     },
-  }), [chartPoints, xKey, yKey])
+  }), [axisBounds, chartPoints, xKey, yKey])
 
   const [selected, setSelected] = useState<PlayerRecord | null>(null)
 
   return (
-    <div className="container">
+    <main className="container visualizer-page">
       <header className="header">
-        <h1 className="title">VNL Stats Visualizer</h1>
+        <div>
+          <p className="eyebrow">PLAYER EXPLORER</p>
+          <h1 className="title">Build your own comparison.</h1>
+          <p className="page-intro">
+            Filter the field, choose two metrics, and find the players who separate themselves.
+          </p>
+        </div>
         <button
           className="reset"
           onClick={() => {
@@ -339,7 +219,11 @@ function App() {
         </button>
       </header>
       <div className="layout">
-        <aside className="panel">
+        <aside className="panel filter-panel">
+          <div className="panel-heading">
+            <span>FILTERS</span>
+            <span>{filtered.length} / {rawData.length}</span>
+          </div>
           <div className="section">
             <MultiSelect
               label="Team"
@@ -435,10 +319,17 @@ function App() {
             />
           </div>
         </aside>
-        <section className="panel">
+        <section className="panel chart-panel">
           <div className="chartHeader">
-            <div className="chip">{chartPoints.length} players</div>
-            <div className="chip">X: {xKey} · Y: {yKey}</div>
+            <div>
+              <span className="chart-kicker">LIVE RESULT</span>
+              <strong>{chartPoints.length} players</strong>
+            </div>
+            <div className="axis-summary">
+              <span>{xKey}</span>
+              <i aria-hidden="true">×</i>
+              <span>{yKey}</span>
+            </div>
           </div>
           {loading && (
             <div className="chartWrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', marginTop: 48 }}>Loading data…</div>
@@ -463,7 +354,7 @@ function App() {
                     <div className="cardTitle">{selected['Player Name']}</div>
                     <div className="row">
                       <span className="chip">Team: {COUNTRY_NAMES[selected.Team] || selected.Team}</span>
-                      <span className="chip">Position: {selected.Position.replace(/\w+/g, w => w.charAt(0) + w.slice(1).toLowerCase())}</span>
+                      <span className="chip">Position: {formatPosition(selected.Position)}</span>
                       <span className="chip">Age: {selected.Age}</span>
                       <span className="chip">Height: {selected.Height} cm</span>
                       <span className="chip">{xKey}: {selected[xKey]}</span>
@@ -476,7 +367,7 @@ function App() {
           )}
         </section>
       </div>
-    </div>
+    </main>
   )
 }
 

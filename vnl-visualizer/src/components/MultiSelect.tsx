@@ -41,7 +41,13 @@ export default function MultiSelect({ label, options, values, onChange, placehol
   return (
     <div className="ms" ref={containerRef}>
       <label className="label">{label}</label>
-      <button type="button" className="ms-control" onClick={() => setOpen((s) => !s)}>
+      <button
+        type="button"
+        className="ms-control"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+      >
         <div className="ms-values">
           {values.length === 0 && (
             <span className="ms-placeholder">{placeholder || 'Select...'}</span>
@@ -64,6 +70,7 @@ export default function MultiSelect({ label, options, values, onChange, placehol
             <input
               className="ms-search"
               placeholder="Search..."
+              aria-label={`Search ${label.toLowerCase()} options`}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -92,5 +99,4 @@ export default function MultiSelect({ label, options, values, onChange, placehol
     </div>
   )
 }
-
 
